@@ -27,17 +27,6 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentRegisterBinding.inflate(layoutInflater)
-//
-//        binding.RegisterUser.setOnClickListener {
-//            if (validateFields()) {
-//                Toast.makeText(requireActivity(), "Registered Successfully", Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-//        }
-//        binding.loginLink.setOnClickListener {
-//            navigateRegisterToLogin()
-//        }
-
         return binding.root
 
     }

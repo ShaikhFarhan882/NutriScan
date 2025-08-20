@@ -31,20 +31,6 @@ class LoginFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(layoutInflater)
-
-        (activity as? AppCompatActivity)?.supportActionBar?.hide()
-        (activity as MainActivity).hideBottomNavigation()
-
-//        binding.loginUser.setOnClickListener {
-//            if (validateFields()){
-//                Toast.makeText(requireContext(),"Logged in Successfully",Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        binding.register.setOnClickListener {
-//          navigateToRegister()
-//        }
-
         return binding.root
     }
 

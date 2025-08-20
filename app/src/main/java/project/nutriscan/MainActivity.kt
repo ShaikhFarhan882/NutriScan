@@ -37,10 +37,12 @@ class  MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setupWithNavController(navController)
 
-        //checkInitialAuthState()
 
+        checkInitialAuthState()
+        setupNavigationListener()
 
     }
+
     fun showBottomNavigation() {
         binding.bottomNavigation.visibility = View.VISIBLE
     }
@@ -55,6 +57,23 @@ class  MainActivity : AppCompatActivity() {
         } else {
             // User needs to login
             navController.navigate(R.id.login)
+        }
+    }
+
+    private fun setupNavigationListener() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.login, R.id.register -> {
+                    // Hide for auth fragments
+                    hideBottomNavigation()
+                    supportActionBar?.hide()
+                }
+                else -> {
+                    // Show for other fragments
+                    showBottomNavigation()
+                    supportActionBar?.show()
+                }
+            }
         }
     }
 }

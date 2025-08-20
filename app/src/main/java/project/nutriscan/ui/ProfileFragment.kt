@@ -76,6 +76,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Yes") { _, _ ->
                 authViewModel.logout()
+                Toast.makeText(requireActivity(),"Logged out successfully", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
             .show()
