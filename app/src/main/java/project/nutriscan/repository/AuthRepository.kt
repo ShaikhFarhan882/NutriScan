@@ -28,10 +28,12 @@ class AuthRepository {
 
     fun register(email: String, password: String) {
         _authState.value = AuthState.LOADING
-
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                _authState.value = AuthState.AUTHENTICATED
+                //_authState.value = AuthState.AUTHENTICATED
+                // Sign out immediately after registration
+                firebaseAuth.signOut()
+                _authState.value = AuthState.UNAUTHENTICATED
             }
             .addOnFailureListener { exception ->
                 _authState.value = AuthState.ERROR

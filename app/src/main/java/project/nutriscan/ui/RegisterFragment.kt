@@ -22,6 +22,8 @@ class RegisterFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val authViewModel: AuthViewModel by viewModels()
+    private var isRegistrationInProgress = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,15 +46,26 @@ class RegisterFragment : Fragment() {
         authViewModel.authState.observe(viewLifecycleOwner) { authState ->
             when (authState) {
                 AuthState.LOADING -> {
+                    isRegistrationInProgress = true
                     showLoading(true)
                 }
                 AuthState.AUTHENTICATED -> {
                     showLoading(false)
-                    Toast.makeText(requireContext(), "Registration successful!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_register_to_login)
+                    isRegistrationInProgress = false
                 }
                 AuthState.UNAUTHENTICATED -> {
                     showLoading(false)
+                    // Check if this UNAUTHENTICATED state is from successful registration
+                    if (isRegistrationInProgress) {
+                        isRegistrationInProgress = false
+                        Toast.makeText(
+                            requireContext(),
+                            "Registration successful! Please login with your credentials.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        findNavController().navigate(R.id.action_register_to_login)
+                    }
+
                 }
                 AuthState.ERROR -> {
                     showLoading(false)
