@@ -1,0 +1,73 @@
+package project.nutriscan.repository
+
+
+import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import project.nutriscan.utils.AuthState
+
+class AuthRepository {
+
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    val authState = MutableLiveData<AuthState>()
+    val errorMessage = MutableLiveData<String>()
+
+    init {
+        // Check initial auth state
+        authState.value = if (firebaseAuth.currentUser != null) {
+            AuthState.AUTHENTICATED
+        } else {
+            AuthState.UNAUTHENTICATED
+        }
+    }
+
+    fun register(email: String, password: String) {
+        authState.value = AuthState.LOADING
+
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                authState.value = AuthState.AUTHENTICATED
+            }
+            .addOnFailureListener { exception ->
+                authState.value = AuthState.ERROR
+                errorMessage.value = getErrorMessage(exception)
+            }
+    }
+
+    fun login(email: String, password: String) {
+        authState.value = AuthState.LOADING
+
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                authState.value = AuthState.AUTHENTICATED
+            }
+            .addOnFailureListener { exception ->
+                authState.value = AuthState.ERROR
+                errorMessage.value = getErrorMessage(exception)
+            }
+    }
+
+    fun logout() {
+        firebaseAuth.signOut()
+        authState.value = AuthState.UNAUTHENTICATED
+    }
+
+    fun isUserAuthenticated(): Boolean = firebaseAuth.currentUser != null
+
+    private fun getErrorMessage(exception: Exception): String {
+        return when (exception) {
+            is FirebaseAuthException -> when (exception.errorCode) {
+                "ERROR_INVALID_EMAIL" -> "Invalid email format"
+                "ERROR_WEAK_PASSWORD" -> "Password should be at least 6 characters"
+                "ERROR_EMAIL_ALREADY_IN_USE" -> "Email is already registered"
+                "ERROR_USER_NOT_FOUND" -> "No account found with this email"
+                "ERROR_WRONG_PASSWORD" -> "Incorrect password"
+                "ERROR_USER_DISABLED" -> "User account has been disabled"
+                "ERROR_TOO_MANY_REQUESTS" -> "Too many failed attempts. Try again later"
+                else -> exception.message ?: "Authentication failed"
+            }
+            else -> "An unexpected error occurred"
+        }
+    }
+}
