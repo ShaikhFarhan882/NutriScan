@@ -64,8 +64,6 @@ dependencies {
     // Feature module support for Fragments
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 
-
-
     //Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
@@ -93,4 +91,5 @@ dependencies {
     //Circular ImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //
 }

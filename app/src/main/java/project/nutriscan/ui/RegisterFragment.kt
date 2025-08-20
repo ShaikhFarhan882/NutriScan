@@ -44,16 +44,10 @@ class RegisterFragment : Fragment() {
 
     private fun validateFields(): Boolean {
         // Accessing the text from EditText using View Binding
-        val username = binding.usernameEditText.text.toString().trim()
         val email = binding.emailEditText.text.toString().trim()
         val password = binding.passwordEditText.text.toString().trim()
 
         // Validate username
-        if (username.isEmpty()) {
-            binding.usernameEditText.error = "Username is required" // Use binding to set error
-            binding.usernameEditText.requestFocus() // Use binding to request focus
-            return false
-        }
         // Validate email
         if (email.isEmpty()) {
             binding.emailEditText.error = "Email is required" // Use binding to set error
