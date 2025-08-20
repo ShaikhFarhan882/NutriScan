@@ -4,155 +4,328 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:padding="24dp">
 
-            <!-- Circular ImageView for Profile Picture -->
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_profile_24"
-                android:layout_marginTop="16dp"
-                android:contentDescription="Profile Image" />
-
-            <!-- Username Material EditText -->
-
-            <com.google.android.material.textfield.TextInputLayout
+            <!-- Profile Header Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profile_header_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Username"
-                app:boxBackgroundMode="outline"
-                app:hintEnabled="true">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="0dp"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/username_profile"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="15" /> <!-- Limit to 15 characters -->
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:gravity="center">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <!-- Profile Picture with Edit Icon -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-            <!-- Email TextView -->
-            <TextView
-                android:id="@+id/email_text_view"
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/ic_profile_24"
+                            app:civ_border_width="4dp"
+                            app:civ_border_color="?attr/colorPrimary"
+                            android:contentDescription="Profile Image"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Email Display -->
+                    <TextView
+                        android:id="@+id/email_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="user@example.com"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/colorPrimary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Personal Information Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_marginTop="10dp"
+                android:id="@+id/personal_info_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="user@example.com"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="16sp" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutline"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintTop_toBottomOf="@id/profile_header_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Bio EditText -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/Bio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Bio"
-                app:boxBackgroundMode="outline"
-                app:hintEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/bio_profile"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="120"
-                    android:maxLines="3"/> <!-- Limit to 15 characters -->
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <!-- Section Title -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Personal Information"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/colorPrimary"
+                        android:layout_marginBottom="16dp" />
 
-            <!-- Dietary Preferences Title -->
-            <TextView
-                android:id="@+id/dietary_preferences_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Dietary Preferences"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                    <!-- Username Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Username"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:startIconTint="?attr/colorPrimary"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="15"
+                        android:layout_marginBottom="12dp">
 
-            <!-- Allergens Checkboxes -->
-            <CheckBox
-                android:id="@+id/allergen_gluten"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Gluten" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/username_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="15"
+                            android:inputType="textPersonName"
+                            android:imeOptions="actionNext" />
 
-            <CheckBox
-                android:id="@+id/allergen_nuts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Nuts" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            <CheckBox
-                android:id="@+id/allergen_dairy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Dairy" />
+                    <!-- Bio Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Bio"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:startIconTint="?attr/colorPrimary"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="120">
 
-            <CheckBox
-                android:id="@+id/allergen_soy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Soy" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/bio_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="120"
+                            android:maxLines="3"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:imeOptions="actionDone" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/update_profile_button"
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dietary Preferences Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_marginTop="10dp"
+                android:id="@+id/dietary_preferences_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Update Profile"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginTop="16dp"
-                app:cornerRadius="8dp" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutline"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintTop_toBottomOf="@id/personal_info_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/test_register"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Section Title -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dietary Preferences"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/colorPrimary"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Allergens in Grid Layout -->
+                    <GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="2"
+                        android:rowCount="2">
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_gluten"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Gluten Free"
+                            android:textSize="16sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_nuts"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Nut Free"
+                            android:textSize="16sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_dairy"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Dairy Free"
+                            android:textSize="16sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_soy"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Soy Free"
+                            android:textSize="16sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                    </GridLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:id="@+id/action_buttons_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test Register"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginTop="16dp"
-                app:cornerRadius="8dp" />
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/dietary_preferences_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/test_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test Login"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginTop="16dp"
-                app:cornerRadius="8dp" />
+                <!-- Update Profile Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/update_profile_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Update Profile"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    app:iconTint="@color/white"
+                    app:cornerRadius="12dp"
+                    android:layout_marginBottom="12dp"
+                    app:backgroundTint="?attr/colorPrimary" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/logout_user"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Logout"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginTop="16dp"
-                app:cornerRadius="8dp" />
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutline"
+                    android:layout_marginVertical="16dp" />
 
-        </LinearLayout>
+                <!-- Testing Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Developer Tools"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginBottom="8dp" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/test_register"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Test Register"
+                    android:textColor="?attr/colorPrimary"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    android:layout_marginBottom="8dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/test_login"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Test Login"
+                    android:textColor="?attr/colorPrimary"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Logout Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/logout_user"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Logout"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/design_default_color_error"
+                    app:iconTint="@color/design_default_color_error"
+                    app:strokeColor="@color/design_default_color_error"
+                    app:cornerRadius="12dp" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
