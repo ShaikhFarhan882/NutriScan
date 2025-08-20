@@ -37,7 +37,7 @@
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/username_edit_text"
+                    android:id="@+id/username_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="15" /> <!-- Limit to 15 characters -->
@@ -56,6 +56,7 @@
 
             <!-- Bio EditText -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Bio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Bio"
@@ -63,7 +64,7 @@
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/bio_edit_text"
+                    android:id="@+id/bio_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="120"

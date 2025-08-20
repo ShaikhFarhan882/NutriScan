@@ -35,6 +35,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         binding.emailTextView.text = "johndoe@gmail.com"
 
 
+
         binding.updateProfileButton.setOnClickListener {
             // Extract checkbox values
             val isGlutenChecked = binding.allergenGluten.isChecked
@@ -42,13 +43,19 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
             val isDairyChecked = binding.allergenDairy.isChecked
             val isSoyChecked = binding.allergenSoy.isChecked
 
-            storeCheckboxValues(isGlutenChecked,isNutsChecked,isDairyChecked,isSoyChecked)
+            //Extract EditText
+            val username = binding.usernameProfile.text.toString()
+            val bio = binding.bioProfile.text.toString()
+
+            storeCheckboxValues(isGlutenChecked,isNutsChecked,isDairyChecked,isSoyChecked,username,bio)
 
             val message =
                 "Gluten: $isGlutenChecked, Nuts: $isNutsChecked, Dairy: $isDairyChecked, Soy: $isSoyChecked"
 
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
+
+
 
         //----------------Testing Screens-----------------.
         binding.testRegister.setOnClickListener {
@@ -82,7 +89,9 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
             .show()
     }
 
-    private fun storeCheckboxValues(isGlutenChecked: Boolean, isNutsChecked: Boolean, isDairyChecked: Boolean, isSoyChecked: Boolean) {
+    private fun storeCheckboxValues(isGlutenChecked: Boolean, isNutsChecked: Boolean,
+                                    isDairyChecked: Boolean, isSoyChecked: Boolean,
+                                    username: String, bio: String) {
         val sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 
         val editor = sharedPreferences.edit()
@@ -90,6 +99,8 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         editor.putBoolean("nuts", isNutsChecked)
         editor.putBoolean("dairy", isDairyChecked)
         editor.putBoolean("soy", isSoyChecked)
+        editor.putString("username",username)
+        editor.putString("bio",bio)
         editor.apply() // Save changes asynchronously
     }
 
@@ -99,6 +110,13 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         binding.allergenNuts.isChecked = sharedPreferences.getBoolean("nuts", false)
         binding.allergenDairy.isChecked = sharedPreferences.getBoolean("dairy", false)
         binding.allergenSoy.isChecked = sharedPreferences.getBoolean("soy", false)
+
+        //editText values
+        val username = sharedPreferences.getString("username", "") ?: ""
+        val bio = sharedPreferences.getString("bio", "") ?: ""
+
+        binding.usernameProfile.setText(username)
+        binding.bioProfile.setText(bio)
     }
 
     override fun onDestroy() {
