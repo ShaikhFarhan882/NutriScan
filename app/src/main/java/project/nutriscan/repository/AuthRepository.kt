@@ -1,6 +1,5 @@
 package project.nutriscan.repository
 
-
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException

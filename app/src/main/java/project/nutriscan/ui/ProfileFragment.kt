@@ -8,14 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import project.nutriscan.R
 import project.nutriscan.databinding.FragmentProfileBinding
+import project.nutriscan.viewmodel.AuthViewModel
+import kotlin.getValue
 
 class ProfileFragment : androidx.fragment.app.Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private val authViewModel: AuthViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,10 +58,27 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         binding.testLogin.setOnClickListener {
             findNavController().navigate(R.id.login)
         }
+
+        binding.logoutUser.setOnClickListener {
+            showLogoutConfirmation()
+        }
+
+
         //-------------------------------------------------
 
 
         return binding.root
+    }
+
+    private fun showLogoutConfirmation() {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Yes") { _, _ ->
+                authViewModel.logout()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun storeCheckboxValues(isGlutenChecked: Boolean, isNutsChecked: Boolean, isDairyChecked: Boolean, isSoyChecked: Boolean) {

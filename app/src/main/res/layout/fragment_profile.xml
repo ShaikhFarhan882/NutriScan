@@ -140,6 +140,16 @@
                 android:layout_marginTop="16dp"
                 app:cornerRadius="8dp" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/logout_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="16dp"
+                app:cornerRadius="8dp" />
+
         </LinearLayout>
 
 
