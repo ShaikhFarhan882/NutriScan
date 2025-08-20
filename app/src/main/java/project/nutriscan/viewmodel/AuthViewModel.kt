@@ -8,7 +8,9 @@ class AuthViewModel : ViewModel() {
     private val authRepository = AuthRepository()
 
     val authState = authRepository.authState
+
     val errorMessage = authRepository.errorMessage
+
 
     fun register(email: String, password: String) {
         authRepository.register(email, password)

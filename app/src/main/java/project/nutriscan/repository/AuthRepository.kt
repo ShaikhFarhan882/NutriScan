@@ -1,5 +1,6 @@
 package project.nutriscan.repository
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -9,12 +10,16 @@ class AuthRepository {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    val authState = MutableLiveData<AuthState>()
-    val errorMessage = MutableLiveData<String>()
+
+    private val _authState = MutableLiveData<AuthState>()
+    val authState: LiveData<AuthState> = _authState
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
 
     init {
         // Check initial auth state
-        authState.value = if (firebaseAuth.currentUser != null) {
+        _authState.value = if (firebaseAuth.currentUser != null) {
             AuthState.AUTHENTICATED
         } else {
             AuthState.UNAUTHENTICATED
@@ -22,34 +27,34 @@ class AuthRepository {
     }
 
     fun register(email: String, password: String) {
-        authState.value = AuthState.LOADING
+        _authState.value = AuthState.LOADING
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                authState.value = AuthState.AUTHENTICATED
+                _authState.value = AuthState.AUTHENTICATED
             }
             .addOnFailureListener { exception ->
-                authState.value = AuthState.ERROR
-                errorMessage.value = getErrorMessage(exception)
+                _authState.value = AuthState.ERROR
+                _errorMessage.value = getErrorMessage(exception)
             }
     }
 
     fun login(email: String, password: String) {
-        authState.value = AuthState.LOADING
+        _authState.value = AuthState.LOADING
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                authState.value = AuthState.AUTHENTICATED
+                _authState.value = AuthState.AUTHENTICATED
             }
             .addOnFailureListener { exception ->
-                authState.value = AuthState.ERROR
-                errorMessage.value = getErrorMessage(exception)
+                _authState.value = AuthState.ERROR
+               _errorMessage.value = getErrorMessage(exception)
             }
     }
 
     fun logout() {
         firebaseAuth.signOut()
-        authState.value = AuthState.UNAUTHENTICATED
+        _authState.value = AuthState.UNAUTHENTICATED
     }
 
     fun isUserAuthenticated(): Boolean = firebaseAuth.currentUser != null
