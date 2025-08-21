@@ -238,15 +238,15 @@ class ProductDetailFragment : Fragment() {
             "eggs" -> "Eggs and Egg Products"
             "peanuts" -> "Peanuts (Groundnuts)"
             "tree nuts", "nuts" -> "Tree Nuts (Various)"
-            "soy", "soya" -> "Soy and Soy Products"
+            "soy", "soya", "soybeans" -> "Soy and Soy Products"
             "fish" -> "Fish and Fish Products"
             "shellfish" -> "Crustaceans and Mollusks"
-            "sesame" -> "Sesame Seeds and Oil"
+            "sesame","sesame-seeds" -> "Sesame Seeds and Oil"
             "wheat" -> "Wheat and Wheat Products"
             "celery" -> "Celery and Celeriac"
             "mustard" -> "Mustard Seeds and Powder"
             "lupin" -> "Lupin Beans and Flour"
-            "sulfites", "sulphites" -> "Sulfur Dioxide and Sulfites"
+            "sulfites", "sulphites", "sulphur-dioxide-and-sulphites"-> "Sulfur Dioxide and Sulfites"
             else -> "Unknown Allergen"
         }
     }

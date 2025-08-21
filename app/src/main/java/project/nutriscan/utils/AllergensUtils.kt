@@ -90,7 +90,7 @@ object AllergenUtils {
                 avoidanceAdvice = "Avoid all shellfish. Be cautious in seafood restaurants due to cross-contamination.",
             )
 
-            "sesame" -> AllergenInfo(
+            "sesame","sesame-seeds" -> AllergenInfo(
                 code = "Sesame",
                 fullName = "Sesame Seeds and Oil",
                 category = "Seed",
@@ -140,7 +140,7 @@ object AllergenUtils {
                 avoidanceAdvice = "Be cautious if you have peanut allergies. Check bread and baked goods.",
             )
 
-            "sulfites", "sulphites" -> AllergenInfo(
+            "sulfites", "sulphites", "sulphur-dioxide-and-sulphites"-> AllergenInfo(
                 code = "Sulfites",
                 fullName = "Sulfur Dioxide and Sulfites",
                 category = "Preservative",
