@@ -21,11 +21,11 @@ class ScanBarcodeFragment : Fragment() {
 
     private lateinit var codeScanner: CodeScanner
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-        (activity as MainActivity).hideBottomNavigation()
-    }
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+//        (activity as MainActivity).hideBottomNavigation()
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +41,8 @@ class ScanBarcodeFragment : Fragment() {
 
         setupScanner()
         setupClickListeners()
+
+
     }
 
     private fun setupScanner() {
@@ -116,11 +118,11 @@ class ScanBarcodeFragment : Fragment() {
         super.onPause()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
-        (activity as MainActivity).showBottomNavigation()
-    }
+//    override fun onDetach() {
+//        super.onDetach()
+//        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+//        (activity as MainActivity).showBottomNavigation()
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

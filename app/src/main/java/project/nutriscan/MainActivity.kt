@@ -63,7 +63,7 @@ class  MainActivity : AppCompatActivity() {
     private fun setupNavigationListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.login, R.id.register -> {
+                R.id.login, R.id.register, R.id.scanBarcodeFragment -> {
                     // Hide for auth fragments
                     hideBottomNavigation()
                     supportActionBar?.hide()
