@@ -1,31 +1,21 @@
 package project.nutriscan.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
-import project.nutriscan.MainActivity
 import project.nutriscan.databinding.FragmentScanBarcodeBinding
 
 class ScanBarcodeFragment : Fragment() {
     private var _binding: FragmentScanBarcodeBinding? = null
     private val binding get() = _binding!!
     private var barcode: String = ""
-
-    private lateinit var codeScanner: CodeScanner
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-//        (activity as MainActivity).hideBottomNavigation()
-//    }
+    private var codeScanner: CodeScanner? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,38 +28,46 @@ class ScanBarcodeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupScanner()
         setupClickListeners()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        setupScanner()
+        codeScanner?.startPreview()
+    }
 
+    override fun onPause() {
+        codeScanner?.releaseResources()
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        codeScanner = null
     }
 
     private fun setupScanner() {
-        val scannerView = binding.scannerView
-        val activity = requireActivity()
-        codeScanner = CodeScanner(activity, scannerView)
-
-        codeScanner.decodeCallback = DecodeCallback { result ->
-            activity.runOnUiThread {
-                barcode = result.text.toString()
-
-                // Update UI with scanned barcode
-                binding.currentScannedBarcode.text = barcode
-                binding.barcodeDisplayCard.visibility = View.VISIBLE
-
-                // Enable the search button
-                binding.ScanForProduct.isEnabled = true
+        if (codeScanner == null) {
+            val scannerView = binding.scannerView
+            val activity = requireActivity()
+            codeScanner = CodeScanner(activity, scannerView)
+            codeScanner?.decodeCallback = DecodeCallback { result ->
+                activity.runOnUiThread {
+                    barcode = result.text.toString()
+                    binding.currentScannedBarcode.text = barcode
+                    binding.barcodeDisplayCard.visibility = View.VISIBLE
+                    binding.ScanForProduct.isEnabled = true
+                }
             }
-        }
-
-        scannerView.setOnClickListener {
-            codeScanner.startPreview()
+            scannerView.setOnClickListener {
+                codeScanner?.startPreview()
+            }
         }
     }
 
     private fun setupClickListeners() {
-        // Set up search button click listener ONCE
         binding.ScanForProduct.setOnClickListener {
             handleSearchClick()
         }
@@ -94,9 +92,7 @@ class ScanBarcodeFragment : Fragment() {
     }
 
     private fun isValidEan(barcode: String): Boolean {
-        // Support both EAN-13 and UPC-A (12 digits)
         if (barcode.length != 13 && barcode.length != 12) return false
-
         return try {
             val allDigits = barcode.map { it.toString().toInt() }
             val s = if (barcode.length % 2 == 0) 3 else 1
@@ -106,26 +102,5 @@ class ScanBarcodeFragment : Fragment() {
         } catch (e: NumberFormatException) {
             false
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        codeScanner.startPreview()
-    }
-
-    override fun onPause() {
-        codeScanner.releaseResources()
-        super.onPause()
-    }
-
-//    override fun onDetach() {
-//        super.onDetach()
-//        (requireActivity() as AppCompatActivity).supportActionBar?.show()
-//        (activity as MainActivity).showBottomNavigation()
-//    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
