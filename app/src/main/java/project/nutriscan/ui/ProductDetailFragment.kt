@@ -119,9 +119,12 @@ class ProductDetailFragment : Fragment() {
             convertNutrientsSummary(nutrientsTags)
 
             //Allergens
-            val formattedAllergens = formatAllergens(it.product?.allergens)
-            binding.allergen.text = formattedAllergens
-            //binding.allergen.setTextColor(Color.RED)
+//            val formattedAllergens = formatAllergens(it.product?.allergens)
+//            binding.allergen.text = formattedAllergens
+//            //binding.allergen.setTextColor(Color.RED)
+
+            val allergensTags = (it?.product?.allergens)
+            displayAllergensTags(allergensTags)
 
 
             //Product Image
@@ -143,11 +146,10 @@ class ProductDetailFragment : Fragment() {
                 "Score: ${it.product?.ecoscore_score ?: "Not Found"}"
         })
 
-
-
         return binding.root
 
     }
+
 
     private fun convertNutrientsSummary(nutrientsTags: List<String>?) {
         if (!nutrientsTags.isNullOrEmpty()) {
@@ -194,6 +196,63 @@ class ProductDetailFragment : Fragment() {
         return tag.replace("en:", "").uppercase()
     }
 
+    //
+
+    private fun displayAllergensTags(allergensTags: String?) {
+        if (!allergensTags.isNullOrEmpty()) {
+            val allergenList = allergensTags.split(",").map { it.trim() }
+            val formattedAllergens = allergenList.mapIndexed { index, tag ->
+                val convertedTag = convertAllergenTagFormat(tag)
+                val fullName = getAllergenFullName(convertedTag)
+                "${index + 1}. $convertedTag - $fullName"
+            }.joinToString("\n")
+
+            binding.allergen.text = "Allergens:\n$formattedAllergens"
+
+            // Set click listener and properties ONCE
+            binding.allergen.setOnClickListener {
+                navigateToAllergensDetail(allergensTags)
+            }
+            binding.allergen.isClickable = true
+            binding.allergen.isFocusable = true
+
+        } else {
+            binding.allergen.text = "No allergens detected."
+            binding.allergen.setOnClickListener(null)
+            binding.allergen.isClickable = false
+            binding.allergen.isFocusable = false
+        }
+    }
+
+    private fun convertAllergenTagFormat(tag: String): String {
+        return tag.replace("en:", "").trim().replaceFirstChar { it.uppercase() }
+    }
+
+    /**
+     * Gets the full name/description for an allergen
+     */
+    private fun getAllergenFullName(allergenCode: String): String {
+        return when (allergenCode.lowercase()) {
+            "gluten" -> "Gluten (Wheat Protein)"
+            "milk" -> "Milk and Dairy Products"
+            "eggs" -> "Eggs and Egg Products"
+            "peanuts" -> "Peanuts (Groundnuts)"
+            "tree nuts", "nuts" -> "Tree Nuts (Various)"
+            "soy", "soya" -> "Soy and Soy Products"
+            "fish" -> "Fish and Fish Products"
+            "shellfish" -> "Crustaceans and Mollusks"
+            "sesame" -> "Sesame Seeds and Oil"
+            "wheat" -> "Wheat and Wheat Products"
+            "celery" -> "Celery and Celeriac"
+            "mustard" -> "Mustard Seeds and Powder"
+            "lupin" -> "Lupin Beans and Flour"
+            "sulfites", "sulphites" -> "Sulfur Dioxide and Sulfites"
+            else -> "Unknown Allergen"
+        }
+    }
+
+    //
+
 
     fun formatAllergens(allergens: String?): String {
         if (allergens.isNullOrEmpty()) {
@@ -228,6 +287,12 @@ class ProductDetailFragment : Fragment() {
     private fun navigateToAdditivesDetail(additivesTags: List<String>) {
         val action = ProductDetailFragmentDirections
             .actionProductDetailFragmentToAdditivesDetailFragment(additivesTags.toTypedArray())
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToAllergensDetail(allergens : String){
+        val action = ProductDetailFragmentDirections
+            .actionProductDetailFragmentToAllergenDetails(allergens ?: "")
         findNavController().navigate(action)
     }
 

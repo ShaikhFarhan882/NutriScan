@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_productDetailFragment_to_additivesDetailFragment"
             app:destination="@id/additivesDetailFragment" />
+        <action
+            android:id="@+id/action_productDetailFragment_to_allergenDetails"
+            app:destination="@id/allergenDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/register"
@@ -98,5 +101,17 @@
             android:name="additives"
             app:argType="string[]" />
     </fragment>
+
+    <fragment
+        android:id="@+id/allergenDetailsFragment"
+        android:name="project.nutriscan.ui.AllergensDetailFragment"
+        android:label="fragment_allergen_details"
+        tools:layout="@layout/fragment_allergen_details">
+
+        <argument
+            android:name="allergens"
+            app:argType="string"/>
+    </fragment>
+
 
 </navigation>

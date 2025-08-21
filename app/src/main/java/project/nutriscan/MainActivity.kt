@@ -15,11 +15,11 @@ import project.nutriscan.viewmodel.AuthViewModel
 import project.nutriscan.viewmodel.NutritionViewModel
 import project.nutriscan.viewmodel.ViewModelFactory
 
-class  MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navController : NavController
-    lateinit var viewModel : NutritionViewModel
+    private lateinit var navController: NavController
+    lateinit var viewModel: NutritionViewModel
 
     private val authViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +27,16 @@ class  MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
 
         navController = navHostFragment.navController
 
         val repository = Repository()
 
-        viewModel = ViewModelProvider(this, ViewModelFactory(repository,application)).get(NutritionViewModel::class.java)
+        viewModel = ViewModelProvider(this, ViewModelFactory(repository, application)).get(
+            NutritionViewModel::class.java
+        )
 
         binding.bottomNavigation.setupWithNavController(navController)
 
@@ -46,6 +49,7 @@ class  MainActivity : AppCompatActivity() {
     fun showBottomNavigation() {
         binding.bottomNavigation.visibility = View.VISIBLE
     }
+
     fun hideBottomNavigation() {
         binding.bottomNavigation.visibility = View.GONE
     }
@@ -63,11 +67,14 @@ class  MainActivity : AppCompatActivity() {
     private fun setupNavigationListener() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.login, R.id.register, R.id.scanBarcodeFragment, R.id.productDetailFragment, R.id.additivesDetailFragment -> {
+                R.id.login, R.id.register, R.id.scanBarcodeFragment,
+                R.id.productDetailFragment, R.id.additivesDetailFragment,
+                R.id.allergenDetailsFragment -> {
                     // Hide for auth and details fragments
                     hideBottomNavigation()
                     supportActionBar?.hide()
                 }
+
                 else -> {
                     // Show for other fragments
                     showBottomNavigation()

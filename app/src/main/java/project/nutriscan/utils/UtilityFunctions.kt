@@ -213,7 +213,7 @@ class UtilityFunctions {
 
                 // E500–E599: Acidity regulators, anti-caking agents, raising agents
                 "E500" to "Sodium carbonates",
-                "E500ii" to "Sodium bicarbonate",
+                "E500II" to "Sodium bicarbonate",
                 "E501" to "Potassium carbonates",
                 "E502" to "Ammonium carbonates",
                 "E503" to "Magnesium carbonates",
