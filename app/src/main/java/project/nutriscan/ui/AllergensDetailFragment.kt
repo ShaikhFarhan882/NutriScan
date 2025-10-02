@@ -31,7 +31,7 @@ class AllergensDetailFragment : Fragment() {
 
         setupUI()
         setupRecyclerView()
-        //setupClickListeners()
+        setupClickListeners()
     }
 
     private fun setupUI() {
@@ -65,11 +65,11 @@ class AllergensDetailFragment : Fragment() {
         allergensAdapter.submitList(allergensList)
     }
 
-//    private fun setupClickListeners() {
-//        binding.backButton.setOnClickListener {
-//            findNavController().navigateUp()
-//        }
-//    }
+    private fun setupClickListeners() {
+        binding.toolbar.setOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

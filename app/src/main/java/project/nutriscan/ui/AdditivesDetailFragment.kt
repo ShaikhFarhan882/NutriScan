@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import project.nutriscan.R
@@ -23,6 +24,10 @@ class AdditivesDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAdditivesDetailBinding.inflate(inflater, container, false)
+
+        binding.toolbar.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
         return binding.root
     }
