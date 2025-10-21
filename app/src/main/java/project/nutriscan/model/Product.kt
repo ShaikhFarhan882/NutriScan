@@ -72,5 +72,15 @@ data class Product(
     val brands : String?,
 
 
+    // Palm Oil Detection Fields
+    val ingredients_from_palm_oil_n: Int?,
+    val ingredients_from_palm_oil: List<String>?,
+    val ingredients_from_palm_oil_tags: List<String>?,
+    val ingredients_that_may_be_from_palm_oil_n: Int?,
+    val ingredients_that_may_be_from_palm_oil: List<String>?,
+    val ingredients_that_may_be_from_palm_oil_tags: List<String>?,
+    val ingredients_analysis_tags: List<String>?
+
+
 
 )

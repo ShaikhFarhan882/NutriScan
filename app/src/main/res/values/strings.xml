@@ -2,4 +2,21 @@
     <string name="app_name">NutriScan</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Palm Oil Strings -->
+    <string name="product_image">Product Image</string>
+    <string name="palm_oil_status">Palm Oil Status</string>
+    <string name="palm_oil_warning">Palm Oil Warning</string>
+    <string name="palm_oil_caution">Palm Oil Caution</string>
+    <string name="palm_oil_free">Palm Oil Free</string>
+    <string name="palm_oil_unknown">Palm Oil Status Unknown</string>
+    <string name="palm_oil_details">Palm Oil Analysis</string>
+    <string name="palm_oil_count">%d ingredient(s) from palm oil</string>
+    <string name="palm_oil_may_contain_count">%d ingredient(s) may contain palm oil</string>
+    <string name="sustainable_palm_oil">Sustainable Palm Oil Certified</string>
+    <string name="unknown_product">Unknown Product</string>
+    <string name="palm_oil_drop">Palm Oil Drop</string>
+    <string name="palm_tree">Palm Tree</string>
+    <string name="no_palm_oil">No Palm Oil</string>
 </resources>

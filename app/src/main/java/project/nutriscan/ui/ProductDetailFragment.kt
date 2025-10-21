@@ -3,6 +3,7 @@ package project.nutriscan.ui
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import coil.load
 import project.nutriscan.MainActivity
 import project.nutriscan.R
 import project.nutriscan.databinding.FragmentProductDetailBinding
+import project.nutriscan.model.Product
 import project.nutriscan.utils.UtilityFunctions.Companion.getAdditiveFullName
 import project.nutriscan.viewmodel.NutritionViewModel
 
@@ -39,16 +41,37 @@ class ProductDetailFragment : Fragment() {
 
         //API Call to retrieve data.
         val barcode = args.barcode
+//        viewmodel.searchProduct(
+//            barcode,
+//            "nutriments,allergens,image_url," +
+//                    "additives_tags,ingredients_text_en,ingredients" +
+//                    "countries,ecoscore_grade,ecoscore_score," +
+//                    "nutrient_levels_tags,product_name,brands,manufacturing_places"
+//        )
         viewmodel.searchProduct(
             barcode,
             "nutriments,allergens,image_url," +
-                    "additives_tags,ingredients_text_en,ingredients" +
+                    "additives_tags,ingredients_text_en,ingredients," +
                     "countries,ecoscore_grade,ecoscore_score," +
-                    "nutrient_levels_tags,product_name,brands,manufacturing_places"
+                    "nutrient_levels_tags,product_name,brands,manufacturing_places," +
+                    // Palm Oil Detection Fields
+                    "ingredients_from_palm_oil_n," +
+                    "ingredients_from_palm_oil," +
+                    "ingredients_from_palm_oil_tags," +
+                    "ingredients_that_may_be_from_palm_oil_n," +
+                    "ingredients_that_may_be_from_palm_oil," +
+                    "ingredients_that_may_be_from_palm_oil_tags," +
+                    "ingredients_analysis_tags," +
+                    // Additional useful fields
+                    "ingredients_tags," +
+                    "labels"
         )
 
         //Observing and Mapping Values.
         viewmodel.productDetails.observe(viewLifecycleOwner, Observer {
+
+            //Palm Oil
+            displayPalmOilInfo(it.product)
 
             //Product Info Card
             binding.productName.text =
@@ -146,10 +169,10 @@ class ProductDetailFragment : Fragment() {
                 "Score: ${it.product?.ecoscore_score ?: "Not Found"}"
         })
 
+
         return binding.root
 
     }
-
 
     private fun convertNutrientsSummary(nutrientsTags: List<String>?) {
         if (!nutrientsTags.isNullOrEmpty()) {
@@ -284,6 +307,129 @@ class ProductDetailFragment : Fragment() {
             .joinToString("\n")
     }
 
+    /**
+     * Display palm oil detection information
+     */
+    @SuppressLint("SetTextI18n")
+    private fun displayPalmOilInfo(product: Product?) {
+        if (product == null) {
+            binding.palmOilCard.visibility = View.GONE
+            return
+        }
+
+        // Get palm oil counts (handle null as 0)
+        val palmOilCount = product.ingredients_from_palm_oil_n ?: 0
+        val mayContainCount = product.ingredients_that_may_be_from_palm_oil_n ?: 0
+
+        Log.d("PalmOilDisplay", "Counts - Contains: $palmOilCount, MayContain: $mayContainCount")
+
+        // Show the palm oil card
+        binding.palmOilCard.visibility = View.VISIBLE
+
+        // Hide all layouts first
+        binding.containsPalmOilLayout.visibility = View.GONE
+        binding.mayContainPalmOilLayout.visibility = View.GONE
+        binding.palmOilFreeLayout.visibility = View.GONE
+
+        when {
+            // Contains Palm Oil - definitively has palm oil
+            palmOilCount > 0 -> {
+                Log.d("PalmOilDisplay", "Showing CONTAINS layout")
+                binding.containsPalmOilLayout.visibility = View.VISIBLE
+                binding.palmOilCount.text = "$palmOilCount ingredient(s) from palm oil"
+
+                // Add ingredient names if available
+                val ingredients = product.ingredients_from_palm_oil_tags
+                    ?: product.ingredients_from_palm_oil
+                    ?: emptyList()
+
+                if (ingredients.isNotEmpty()) {
+                    val formattedIngredients = ingredients.take(3).joinToString(", ") { ingredient ->
+                        ingredient.replace("en:", "").replace("-", " ")
+                            .split(" ").joinToString(" ") { it.capitalize() }
+                    }
+                    val more = if (ingredients.size > 3) " and ${ingredients.size - 3} more" else ""
+                    binding.palmOilCount.text = "$palmOilCount ingredient(s):\n$formattedIngredients$more"
+                }
+
+                // Check for sustainable certification
+                val isSustainable = product.labels?.contains("sustainable palm oil", ignoreCase = true) == true ||
+                        product.labels?.contains("rspo", ignoreCase = true) == true
+
+                if (isSustainable) {
+                    binding.palmOilCount.text = binding.palmOilCount.text.toString() +
+                            "\n\n✓ Sustainable (RSPO Certified)"
+                }
+            }
+
+            // May Contain Palm Oil
+            mayContainCount > 0 -> {
+                Log.d("PalmOilDisplay", "Showing MAY CONTAIN layout")
+                binding.mayContainPalmOilLayout.visibility = View.VISIBLE
+                binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s) may contain palm oil"
+
+                // Add ingredient names if available
+                val ingredients = product.ingredients_that_may_be_from_palm_oil_tags
+                    ?: product.ingredients_that_may_be_from_palm_oil
+                    ?: emptyList()
+
+                if (ingredients.isNotEmpty()) {
+                    val formattedIngredients = ingredients.take(3).joinToString(", ") { ingredient ->
+                        ingredient.replace("en:", "").replace("-", " ")
+                            .split(" ").joinToString(" ") { it.capitalize() }
+                    }
+                    val more = if (ingredients.size > 3) " and ${ingredients.size - 3} more" else ""
+                    binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s):\n$formattedIngredients$more"
+                }
+            }
+
+            // Check if it's actually palm oil free or just unknown
+            else -> {
+                // Check analysis tags for explicit palm-oil or palm-oil-free markers
+                val analysisTags = product.ingredients_analysis_tags ?: emptyList()
+                val hasPalmOilTag = analysisTags.any { it.contains("palm-oil", ignoreCase = true) &&
+                        !it.contains("free", ignoreCase = true) }
+                val hasPalmOilFreeTag = analysisTags.any { it.contains("palm-oil-free", ignoreCase = true) }
+
+                // Check ingredients text for palm oil mentions
+                val ingredientsText = product.ingredients_text?.lowercase() ?: ""
+                val ingredientsTextEn = product.ingredients_text_en?.lowercase() ?: ""
+                val hasPalmOilInText = ingredientsText.contains("palm oil") ||
+                        ingredientsTextEn.contains("palm oil")
+
+                Log.d("PalmOilDisplay", "Analysis - hasPalmOilTag: $hasPalmOilTag, hasPalmOilFreeTag: $hasPalmOilFreeTag, hasPalmOilInText: $hasPalmOilInText")
+
+                when {
+                    hasPalmOilFreeTag -> {
+                        // Explicitly marked as palm oil free
+                        Log.d("PalmOilDisplay", "Showing FREE layout (certified)")
+                        binding.palmOilFreeLayout.visibility = View.VISIBLE
+                        binding.palmOilFreeDescription.text = "Certified palm oil free"
+                    }
+                    hasPalmOilTag || hasPalmOilInText -> {
+                        // Has palm oil but count is 0 - show as contains
+                        Log.d("PalmOilDisplay", "Showing CONTAINS layout (detected in text)")
+                        binding.containsPalmOilLayout.visibility = View.VISIBLE
+                        binding.palmOilCount.text = "Contains palm oil (quantity not specified)"
+                    }
+                    palmOilCount == 0 && mayContainCount == 0 -> {
+                        // No palm oil detected
+                        Log.d("PalmOilDisplay", "Showing FREE layout (no detection)")
+                        binding.palmOilFreeLayout.visibility = View.VISIBLE
+                        binding.palmOilFreeDescription.text = "No palm oil detected"
+                    }
+                    else -> {
+                        // Unknown status - hide the card
+                        Log.d("PalmOilDisplay", "Hiding card (unknown status)")
+                        binding.palmOilCard.visibility = View.GONE
+                    }
+                }
+            }
+        }
+    }
+
+
+//Navigation
     private fun navigateToAdditivesDetail(additivesTags: List<String>) {
         val action = ProductDetailFragmentDirections
             .actionProductDetailFragmentToAdditivesDetailFragment(additivesTags.toTypedArray())

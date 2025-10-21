@@ -294,14 +294,14 @@
     <color name="processing_card_background">#F1F5F9</color>
     <color name="cert_card_background">#F0F9FF</color>
 
-</resources>
 
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<resources>-->
-    <!--    <color name="black">#FF000000</color>-->
-    <!--    <color name="white">#FFFFFFFF</color>-->
-    <!--    <color name="primary">#B27CD9</color>-->
-    <!--</resources>-->
+<!--Palm Oil Colors-->
+        <color name="palm_oil_red">#D32F2F</color>
+        <color name="palm_oil_orange">#F57C00</color>
+        <color name="palm_oil_green">#388E3C</color>
+        <color name="palm_oil_gray">#757575</color>
+    </resources>
+
 
 
 
