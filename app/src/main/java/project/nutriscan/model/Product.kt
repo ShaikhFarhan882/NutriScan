@@ -39,7 +39,7 @@ data class Product(
     val interface_version_created: String?,
     val interface_version_modified: String?,
     val known_ingredients_n: Int?,
-    val labels: String?,
+    //val labels: String?,
     val lc: String?,
     val link: String?,
     val main_countries_tags: List<Any>?,
@@ -79,7 +79,10 @@ data class Product(
     val ingredients_that_may_be_from_palm_oil_n: Int?,
     val ingredients_that_may_be_from_palm_oil: List<String>?,
     val ingredients_that_may_be_from_palm_oil_tags: List<String>?,
-    val ingredients_analysis_tags: List<String>?
+    val ingredients_analysis_tags: List<String>?,
+
+    val labels: String?,  // This field contains sustainability info
+    val labels_tags: List<String>?
 
 
 

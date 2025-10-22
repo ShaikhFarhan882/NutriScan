@@ -64,7 +64,8 @@ class ProductDetailFragment : Fragment() {
                     "ingredients_analysis_tags," +
                     // Additional useful fields
                     "ingredients_tags," +
-                    "labels"
+                    "labels," +
+                    "labels_tags"
         )
 
         //Observing and Mapping Values.
@@ -308,7 +309,7 @@ class ProductDetailFragment : Fragment() {
     }
 
     /**
-     * Display palm oil detection information
+     * Display palm oil detection information with improved sustainable handling
      */
     @SuppressLint("SetTextI18n")
     private fun displayPalmOilInfo(product: Product?) {
@@ -317,13 +318,15 @@ class ProductDetailFragment : Fragment() {
             return
         }
 
-        // Get palm oil counts (handle null as 0)
         val palmOilCount = product.ingredients_from_palm_oil_n ?: 0
         val mayContainCount = product.ingredients_that_may_be_from_palm_oil_n ?: 0
 
-        Log.d("PalmOilDisplay", "Counts - Contains: $palmOilCount, MayContain: $mayContainCount")
+        // Check for sustainable certification
+        val isSustainable = checkSustainablePalmOil(product.labels)
+        val sustainabilityLevel = getSustainabilityLevel(product.labels)
 
-        // Show the palm oil card
+        Log.d("PalmOilDisplay", "Sustainable: $isSustainable, Level: $sustainabilityLevel")
+
         binding.palmOilCard.visibility = View.VISIBLE
 
         // Hide all layouts first
@@ -332,13 +335,11 @@ class ProductDetailFragment : Fragment() {
         binding.palmOilFreeLayout.visibility = View.GONE
 
         when {
-            // Contains Palm Oil - definitively has palm oil
             palmOilCount > 0 -> {
-                Log.d("PalmOilDisplay", "Showing CONTAINS layout")
                 binding.containsPalmOilLayout.visibility = View.VISIBLE
                 binding.palmOilCount.text = "$palmOilCount ingredient(s) from palm oil"
 
-                // Add ingredient names if available
+                // Add ingredient names
                 val ingredients = product.ingredients_from_palm_oil_tags
                     ?: product.ingredients_from_palm_oil
                     ?: emptyList()
@@ -352,23 +353,26 @@ class ProductDetailFragment : Fragment() {
                     binding.palmOilCount.text = "$palmOilCount ingredient(s):\n$formattedIngredients$more"
                 }
 
-                // Check for sustainable certification
-                val isSustainable = product.labels?.contains("sustainable palm oil", ignoreCase = true) == true ||
-                        product.labels?.contains("rspo", ignoreCase = true) == true
-
+                // Add sustainability badge
                 if (isSustainable) {
+                    val badge = when (sustainabilityLevel) {
+                        "identity-preserved" -> "✓ RSPO Identity Preserved (Highest Sustainability)"
+                        "segregated" -> "✓ RSPO Segregated (High Sustainability)"
+                        "mass-balance" -> "✓ RSPO Mass Balance (Sustainable)"
+                        else -> "✓ RSPO Certified Sustainable Palm Oil"
+                    }
                     binding.palmOilCount.text = binding.palmOilCount.text.toString() +
-                            "\n\n✓ Sustainable (RSPO Certified)"
+                            "\n\n$badge"
+
+                    // Change icon color to orange/green blend for sustainable
+                    binding.palmOilWarningIcon.setColorFilter(Color.parseColor("#FF6F00"))
                 }
             }
 
-            // May Contain Palm Oil
             mayContainCount > 0 -> {
-                Log.d("PalmOilDisplay", "Showing MAY CONTAIN layout")
                 binding.mayContainPalmOilLayout.visibility = View.VISIBLE
                 binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s) may contain palm oil"
 
-                // Add ingredient names if available
                 val ingredients = product.ingredients_that_may_be_from_palm_oil_tags
                     ?: product.ingredients_that_may_be_from_palm_oil
                     ?: emptyList()
@@ -381,55 +385,65 @@ class ProductDetailFragment : Fragment() {
                     val more = if (ingredients.size > 3) " and ${ingredients.size - 3} more" else ""
                     binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s):\n$formattedIngredients$more"
                 }
+
+                // Add sustainability info if applicable
+                if (isSustainable) {
+                    binding.mayContainPalmOilCount.text = binding.mayContainPalmOilCount.text.toString() +
+                            "\n\n✓ Sustainable sources possible"
+                }
             }
 
-            // Check if it's actually palm oil free or just unknown
             else -> {
-                // Check analysis tags for explicit palm-oil or palm-oil-free markers
-                val analysisTags = product.ingredients_analysis_tags ?: emptyList()
-                val hasPalmOilTag = analysisTags.any { it.contains("palm-oil", ignoreCase = true) &&
-                        !it.contains("free", ignoreCase = true) }
-                val hasPalmOilFreeTag = analysisTags.any { it.contains("palm-oil-free", ignoreCase = true) }
-
-                // Check ingredients text for palm oil mentions
-                val ingredientsText = product.ingredients_text?.lowercase() ?: ""
-                val ingredientsTextEn = product.ingredients_text_en?.lowercase() ?: ""
-                val hasPalmOilInText = ingredientsText.contains("palm oil") ||
-                        ingredientsTextEn.contains("palm oil")
-
-                Log.d("PalmOilDisplay", "Analysis - hasPalmOilTag: $hasPalmOilTag, hasPalmOilFreeTag: $hasPalmOilFreeTag, hasPalmOilInText: $hasPalmOilInText")
-
-                when {
-                    hasPalmOilFreeTag -> {
-                        // Explicitly marked as palm oil free
-                        Log.d("PalmOilDisplay", "Showing FREE layout (certified)")
-                        binding.palmOilFreeLayout.visibility = View.VISIBLE
-                        binding.palmOilFreeDescription.text = "Certified palm oil free"
-                    }
-                    hasPalmOilTag || hasPalmOilInText -> {
-                        // Has palm oil but count is 0 - show as contains
-                        Log.d("PalmOilDisplay", "Showing CONTAINS layout (detected in text)")
-                        binding.containsPalmOilLayout.visibility = View.VISIBLE
-                        binding.palmOilCount.text = "Contains palm oil (quantity not specified)"
-                    }
-                    palmOilCount == 0 && mayContainCount == 0 -> {
-                        // No palm oil detected
-                        Log.d("PalmOilDisplay", "Showing FREE layout (no detection)")
-                        binding.palmOilFreeLayout.visibility = View.VISIBLE
-                        binding.palmOilFreeDescription.text = "No palm oil detected"
-                    }
-                    else -> {
-                        // Unknown status - hide the card
-                        Log.d("PalmOilDisplay", "Hiding card (unknown status)")
-                        binding.palmOilCard.visibility = View.GONE
-                    }
-                }
+                binding.palmOilFreeLayout.visibility = View.VISIBLE
+                binding.palmOilFreeDescription.text = "No palm oil detected"
             }
         }
     }
 
+    /**
+     * Check if product contains sustainable palm oil
+     */
+    private fun checkSustainablePalmOil(labels: String?): Boolean {
+        if (labels.isNullOrEmpty()) return false
 
-//Navigation
+        val sustainableKeywords = listOf(
+            "sustainable palm oil",
+            "sustainable-palm-oil",
+            "rspo",
+            "certified sustainable palm oil",
+            "rspo-certified",
+            "roundtable on sustainable palm oil"
+        )
+
+        return sustainableKeywords.any { keyword ->
+            labels.contains(keyword, ignoreCase = true)
+        }
+    }
+
+    /**
+     * Get the sustainability certification level
+     */
+    private fun getSustainabilityLevel(labels: String?): String? {
+        if (labels.isNullOrEmpty()) return null
+
+        return when {
+            labels.contains("identity preserved", ignoreCase = true) ||
+                    labels.contains("identity-preserved", ignoreCase = true) -> "identity-preserved"
+
+            labels.contains("segregated", ignoreCase = true) -> "segregated"
+
+            labels.contains("mass balance", ignoreCase = true) ||
+                    labels.contains("mass-balance", ignoreCase = true) -> "mass-balance"
+
+            labels.contains("rspo", ignoreCase = true) ||
+                    labels.contains("sustainable palm oil", ignoreCase = true) -> "rspo"
+
+            else -> null
+        }
+    }
+
+
+    //Navigation
     private fun navigateToAdditivesDetail(additivesTags: List<String>) {
         val action = ProductDetailFragmentDirections
             .actionProductDetailFragmentToAdditivesDetailFragment(additivesTags.toTypedArray())
