@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp"
+        app:strokeColor="#E0E0E0"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Product Image -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageCard"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/productImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Product Image"
+                    tools:src="@drawable/ic_placeholder" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Product Name -->
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toStartOf="@id/deleteButton"
+                app:layout_constraintStart_toEndOf="@id/imageCard"
+                app:layout_constraintTop_toTopOf="@id/imageCard"
+                tools:text="Nutella Hazelnut Spread" />
+
+            <!-- Brand -->
+            <TextView
+                android:id="@+id/brandName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toEndOf="@id/productName"
+                app:layout_constraintStart_toStartOf="@id/productName"
+                app:layout_constraintTop_toBottomOf="@id/productName"
+                tools:text="Ferrero" />
+
+            <!-- Palm Oil Badge -->
+            <LinearLayout
+                android:id="@+id/palmOilBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/badge_background"
+                android:padding="6dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="@id/productName"
+                app:layout_constraintTop_toBottomOf="@id/brandName">
+
+                <ImageView
+                    android:id="@+id/palmOilIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    tools:src="@drawable/ic_palm_oil_warning" />
+
+                <TextView
+                    android:id="@+id/palmOilText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    tools:text="Contains Palm Oil" />
+
+            </LinearLayout>
+
+            <!-- Sustainable Icon -->
+            <ImageView
+                android:id="@+id/sustainableIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/palmOilBadge"
+                app:layout_constraintStart_toEndOf="@id/palmOilBadge"
+                app:layout_constraintTop_toTopOf="@id/palmOilBadge" />
+
+            <!-- Delete Button -->
+            <ImageButton
+                android:id="@+id/deleteButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_delete"
+                android:contentDescription="Delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/text_secondary" />
+
+            <!-- Saved Date -->
+            <TextView
+                android:id="@+id/savedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                app:layout_constraintStart_toStartOf="@id/imageCard"
+                app:layout_constraintTop_toBottomOf="@id/imageCard"
+                tools:text="Saved 2 days ago" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

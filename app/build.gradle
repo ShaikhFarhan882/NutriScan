@@ -65,22 +65,30 @@ dependencies {
     // Feature module support for Fragments
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 
-    //Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+//    //Coroutines
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     //Room Database
-    def roomVersion = "2.5.0-alpha02"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$roomVersion")
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$roomVersion")
+//    def roomVersion = "2.5.0-alpha02"
+//    implementation("androidx.room:room-runtime:$roomVersion")
+//    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+//    // To use Kotlin annotation processing tool (kapt)
+//    kapt("androidx.room:room-compiler:$roomVersion")
+//    // optional - Kotlin Extensions and Coroutines support for Room
+//    implementation("androidx.room:room-ktx:$roomVersion")
+    def room_version = "2.6.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     //Dependency Injection HILT
     implementation "com.google.dagger:hilt-android:2.44"

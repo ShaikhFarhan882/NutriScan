@@ -464,6 +464,7 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Save Product Button -->
 
 
             <!-- Eco-Score Card -->
@@ -1203,8 +1204,26 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <Button
+                android:id="@+id/saveProductButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Save Product"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="@color/pastel_blue"
+                app:layout_constraintTop_toBottomOf="@id/Countries_Card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:iconTint="@color/white" />
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+
 
 </layout>

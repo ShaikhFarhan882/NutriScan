@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import project.nutriscan.database.ProductDatabase
 import project.nutriscan.databinding.ActivityMainBinding
+import project.nutriscan.repository.ProductRepository
 import project.nutriscan.repository.Repository
 import project.nutriscan.viewmodel.AuthViewModel
 import project.nutriscan.viewmodel.NutritionViewModel
@@ -33,8 +35,11 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         val repository = Repository()
+        // Get database instance (not the class itself)
+        val database = ProductDatabase.getDatabase(this)
+        val productRepository = ProductRepository(database)
 
-        viewModel = ViewModelProvider(this, ViewModelFactory(repository, application)).get(
+        viewModel = ViewModelProvider(this, ViewModelFactory(repository,productRepository, application)).get(
             NutritionViewModel::class.java
         )
 

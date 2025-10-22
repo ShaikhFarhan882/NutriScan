@@ -21,7 +21,11 @@
         android:id="@+id/SavedProduct"
         android:name="project.nutriscan.ui.SavedFragment"
         android:label="fragment_saved"
-        tools:layout="@layout/fragment_saved" />
+        tools:layout="@layout/fragment_saved">
+        <action
+            android:id="@+id/action_savedFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/Profile"
         android:name="project.nutriscan.ui.ProfileFragment"

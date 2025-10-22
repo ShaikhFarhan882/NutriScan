@@ -1,13 +1,16 @@
 package project.nutriscan.ui
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -28,6 +31,12 @@ class ProductDetailFragment : Fragment() {
 
     private val args: ProductDetailFragmentArgs by navArgs()
 
+    private var currentProduct: Product? = null
+    private var currentBarcode: String? = null
+    private var isSustainable: Boolean = false
+    private var sustainabilityLevel: String? = null
+    private var hasPalmOil: Boolean = false
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +50,13 @@ class ProductDetailFragment : Fragment() {
 
         //API Call to retrieve data.
         val barcode = args.barcode
-//        viewmodel.searchProduct(
-//            barcode,
-//            "nutriments,allergens,image_url," +
-//                    "additives_tags,ingredients_text_en,ingredients" +
-//                    "countries,ecoscore_grade,ecoscore_score," +
-//                    "nutrient_levels_tags,product_name,brands,manufacturing_places"
-//        )
+
+        currentBarcode = args.barcode
+        //Only call checkIfProductSaved if barcode is not null
+        if (currentBarcode != null) {
+            viewmodel.checkIfProductSaved(currentBarcode!!)
+        }
+
         viewmodel.searchProduct(
             barcode,
             "nutriments,allergens,image_url," +
@@ -70,6 +79,28 @@ class ProductDetailFragment : Fragment() {
 
         //Observing and Mapping Values.
         viewmodel.productDetails.observe(viewLifecycleOwner, Observer {
+
+            //STORE THE PRODUCT FIRST - BEFORE ANYTHING ELSE
+            currentProduct = it.product
+
+            //Add null check and early return if product is null
+            if (currentProduct == null) {
+                Toast.makeText(requireContext(), "Product not found", Toast.LENGTH_SHORT).show()
+                binding.saveProductButton.isEnabled = false
+                binding.saveProductButton.text = "Product Not Available"
+                return@Observer
+            }
+
+            // Enable save button now that we have product data
+            binding.saveProductButton.isEnabled = true
+            binding.saveProductButton.text = "Save Product"
+
+            //Detect palm oil
+            hasPalmOil = detectPalmOil(currentProduct!!)
+
+            //Store sustainability info RIGHT AFTER storing product
+            isSustainable = checkSustainablePalmOil(currentProduct?.labels)
+            sustainabilityLevel = getSustainabilityLevel(currentProduct?.labels)
 
             //Palm Oil
             displayPalmOilInfo(it.product)
@@ -163,13 +194,24 @@ class ProductDetailFragment : Fragment() {
             val formattedCountries = formatCountries(it.product?.countries)
             binding.countries.text = formattedCountries
 
+
             //Ecoscore
             binding.ecoscoreGrade.text =
                 "Grade: ${it.product?.ecoscore_grade ?: "Not Found"}"
             binding.ecoscoreScore.text =
                 "Score: ${it.product?.ecoscore_score ?: "Not Found"}"
+
         })
 
+       //DB Operations
+        viewmodel.isProductSaved.observe(viewLifecycleOwner) { isSaved ->
+            isSaved?.let {
+                updateSaveButton(it)
+            }
+        }
+
+      // Setup button
+        setupSaveButton()
 
         return binding.root
 
@@ -309,7 +351,7 @@ class ProductDetailFragment : Fragment() {
     }
 
     /**
-     * Display palm oil detection information with improved sustainable handling
+     * Display palm oil detection information with improved detection
      */
     @SuppressLint("SetTextI18n")
     private fun displayPalmOilInfo(product: Product?) {
@@ -318,14 +360,46 @@ class ProductDetailFragment : Fragment() {
             return
         }
 
+        // PRIMARY: Check dedicated palm oil fields
         val palmOilCount = product.ingredients_from_palm_oil_n ?: 0
         val mayContainCount = product.ingredients_that_may_be_from_palm_oil_n ?: 0
+
+        // FALLBACK: Check ingredients text for palm oil keywords
+        val ingredientsText = (product.ingredients_text_en ?: product.ingredients_text ?: "").lowercase()
+        val ingredientsTags = product.ingredients_tags ?: emptyList()
+
+        // Check if palm oil is mentioned in text or tags
+        val hasPalmOilInText = ingredientsText.contains("palm oil") ||
+                ingredientsText.contains("palm kernel") ||
+                ingredientsText.contains("palm fat")
+
+        val hasPalmOilInTags = ingredientsTags.any { tag ->
+            tag.contains("palm", ignoreCase = true)
+        }
+
+        // ADDITIONAL: Check ingredients_analysis_tags
+        val analysisTags = product.ingredients_analysis_tags ?: emptyList()
+        val isPalmOilFree = analysisTags.any { it.contains("palm-oil-free", ignoreCase = true) }
+        val hasPalmOilInAnalysis = analysisTags.any {
+            it.contains("palm-oil", ignoreCase = true) && !it.contains("free", ignoreCase = true)
+        }
 
         // Check for sustainable certification
         val isSustainable = checkSustainablePalmOil(product.labels)
         val sustainabilityLevel = getSustainabilityLevel(product.labels)
 
-        Log.d("PalmOilDisplay", "Sustainable: $isSustainable, Level: $sustainabilityLevel")
+        // Debug logging
+        Log.d("PalmOilDebug", "=== Palm Oil Detection ===")
+        Log.d("PalmOilDebug", "palmOilCount: $palmOilCount")
+        Log.d("PalmOilDebug", "mayContainCount: $mayContainCount")
+        Log.d("PalmOilDebug", "hasPalmOilInText: $hasPalmOilInText")
+        Log.d("PalmOilDebug", "hasPalmOilInTags: $hasPalmOilInTags")
+        Log.d("PalmOilDebug", "hasPalmOilInAnalysis: $hasPalmOilInAnalysis")
+        Log.d("PalmOilDebug", "isPalmOilFree: $isPalmOilFree")
+        Log.d("PalmOilDebug", "isSustainable: $isSustainable")
+        Log.d("PalmOilDebug", "sustainabilityLevel: $sustainabilityLevel")
+        Log.d("PalmOilDebug", "ingredients_tags: ${ingredientsTags.take(5)}")
+        Log.d("PalmOilDebug", "=========================")
 
         binding.palmOilCard.visibility = View.VISIBLE
 
@@ -335,40 +409,50 @@ class ProductDetailFragment : Fragment() {
         binding.palmOilFreeLayout.visibility = View.GONE
 
         when {
-            palmOilCount > 0 -> {
+            // CASE 1: Definitely contains palm oil (from dedicated fields OR text/tags)
+            palmOilCount > 0 || hasPalmOilInText || hasPalmOilInTags || hasPalmOilInAnalysis -> {
                 binding.containsPalmOilLayout.visibility = View.VISIBLE
-                binding.palmOilCount.text = "$palmOilCount ingredient(s) from palm oil"
 
-                // Add ingredient names
+                // Build message
+                val message = if (palmOilCount > 0) {
+                    "$palmOilCount ingredient(s) from palm oil"
+                } else {
+                    "Contains palm oil"
+                }
+
+                binding.palmOilCount.text = message
+
+                // Add ingredient names if available
                 val ingredients = product.ingredients_from_palm_oil_tags
                     ?: product.ingredients_from_palm_oil
-                    ?: emptyList()
+                    ?: extractPalmOilFromTags(ingredientsTags)
 
                 if (ingredients.isNotEmpty()) {
                     val formattedIngredients = ingredients.take(3).joinToString(", ") { ingredient ->
-                        ingredient.replace("en:", "").replace("-", " ")
-                            .split(" ").joinToString(" ") { it.capitalize() }
+                        ingredient.replace("en:", "")
+                            .replace("-", " ")
+                            .replace("_", " ")
+                            .split(" ")
+                            .joinToString(" ") { it.capitalize() }
                     }
                     val more = if (ingredients.size > 3) " and ${ingredients.size - 3} more" else ""
-                    binding.palmOilCount.text = "$palmOilCount ingredient(s):\n$formattedIngredients$more"
+                    binding.palmOilCount.text = "${message}\n\nIngredients:\n$formattedIngredients$more"
                 }
 
                 // Add sustainability badge
                 if (isSustainable) {
                     val badge = when (sustainabilityLevel) {
-                        "identity-preserved" -> "✓ RSPO Identity Preserved (Highest Sustainability)"
-                        "segregated" -> "✓ RSPO Segregated (High Sustainability)"
-                        "mass-balance" -> "✓ RSPO Mass Balance (Sustainable)"
-                        else -> "✓ RSPO Certified Sustainable Palm Oil"
+                        "identity-preserved" -> "\n\n✓ RSPO Identity Preserved"
+                        "segregated" -> "\n\n✓ RSPO Segregated"
+                        "mass-balance" -> "\n\n✓ RSPO Mass Balance"
+                        else -> "\n\n✓ RSPO Certified"
                     }
-                    binding.palmOilCount.text = binding.palmOilCount.text.toString() +
-                            "\n\n$badge"
-
-                    // Change icon color to orange/green blend for sustainable
+                    binding.palmOilCount.text = binding.palmOilCount.text.toString() + badge
                     binding.palmOilWarningIcon.setColorFilter(Color.parseColor("#FF6F00"))
                 }
             }
 
+            // CASE 2: May contain palm oil
             mayContainCount > 0 -> {
                 binding.mayContainPalmOilLayout.visibility = View.VISIBLE
                 binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s) may contain palm oil"
@@ -386,17 +470,36 @@ class ProductDetailFragment : Fragment() {
                     binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s):\n$formattedIngredients$more"
                 }
 
-                // Add sustainability info if applicable
                 if (isSustainable) {
                     binding.mayContainPalmOilCount.text = binding.mayContainPalmOilCount.text.toString() +
                             "\n\n✓ Sustainable sources possible"
                 }
             }
 
+            // CASE 3: Palm oil free (explicit or by absence)
+            isPalmOilFree || (palmOilCount == 0 && mayContainCount == 0 && !hasPalmOilInText && !hasPalmOilInTags) -> {
+                binding.palmOilFreeLayout.visibility = View.VISIBLE
+                binding.palmOilFreeDescription.text = if (isPalmOilFree) {
+                    "Certified palm oil free"
+                } else {
+                    "No palm oil detected"
+                }
+            }
+
+            // CASE 4: Unknown
             else -> {
                 binding.palmOilFreeLayout.visibility = View.VISIBLE
-                binding.palmOilFreeDescription.text = "No palm oil detected"
+                binding.palmOilFreeDescription.text = "Palm oil status unknown"
             }
+        }
+    }
+
+    /**
+     * Extract palm oil related ingredients from tags
+     */
+    private fun extractPalmOilFromTags(tags: List<String>): List<String> {
+        return tags.filter { tag ->
+            tag.contains("palm", ignoreCase = true)
         }
     }
 
@@ -442,6 +545,42 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
+    private fun detectPalmOil(product: Product): Boolean {
+        // Method 1: Check dedicated API fields
+        val palmOilCount = product.ingredients_from_palm_oil_n ?: 0
+        if (palmOilCount > 0) {
+            Log.d("PalmOilDetect", "Detected via API field: $palmOilCount")
+            return true
+        }
+
+        // Method 2: Check ingredients text
+        val ingredientsText = (product.ingredients_text_en ?: product.ingredients_text ?: "").lowercase()
+        if (ingredientsText.contains("palm oil") ||
+            ingredientsText.contains("palm kernel") ||
+            ingredientsText.contains("palm fat")) {
+            Log.d("PalmOilDetect", "Detected via ingredients text")
+            return true
+        }
+
+        // Method 3: Check ingredients tags
+        val ingredientsTags = product.ingredients_tags ?: emptyList()
+        if (ingredientsTags.any { it.contains("palm", ignoreCase = true) }) {
+            Log.d("PalmOilDetect", "Detected via ingredients tags")
+            return true
+        }
+
+        // Method 4: Check analysis tags
+        val analysisTags = product.ingredients_analysis_tags ?: emptyList()
+        if (analysisTags.any { it.contains("palm-oil", ignoreCase = true) &&
+                    !it.contains("free", ignoreCase = true) }) {
+            Log.d("PalmOilDetect", "Detected via analysis tags")
+            return true
+        }
+
+        Log.d("PalmOilDetect", "No palm oil detected")
+        return false
+    }
+
 
     //Navigation
     private fun navigateToAdditivesDetail(additivesTags: List<String>) {
@@ -454,6 +593,50 @@ class ProductDetailFragment : Fragment() {
         val action = ProductDetailFragmentDirections
             .actionProductDetailFragmentToAllergenDetails(allergens ?: "")
         findNavController().navigate(action)
+    }
+
+//RoomDB
+    private fun setupSaveButton() {
+        binding.saveProductButton.setOnClickListener {
+            toggleSaveProduct()
+        }
+    }
+
+    private fun toggleSaveProduct() {
+        if (currentProduct == null || currentBarcode == null) {
+            Toast.makeText(requireContext(), "Product data not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (viewmodel.isProductSaved.value == true) {
+            // Delete
+            viewmodel.deleteProduct(currentBarcode!!)
+            Toast.makeText(requireContext(), "Removed from favorites", Toast.LENGTH_SHORT).show()
+        } else {
+            // Save - pass hasPalmOil
+            viewmodel.saveProduct(
+                currentProduct!!,
+                currentBarcode!!,
+                hasPalmOil,  //Pass palm oil detection result
+                isSustainable,
+                sustainabilityLevel
+            )
+            Toast.makeText(requireContext(), "Saved to favorites ✓", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateSaveButton(isSaved: Boolean) {
+        binding.saveProductButton.apply {
+            if (isSaved) {
+                text = "Saved ✓"
+                setBackgroundColor(Color.parseColor("#4CAF50"))
+            } else {
+                text = "Save Product"
+                backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.pastel_blue)
+                )
+            }
+        }
     }
 
 
