@@ -1,5 +1,7 @@
 package project.nutriscan.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Product(
     val _id: String?,
     val _keywords: List<String>?,
@@ -82,8 +84,9 @@ data class Product(
     val ingredients_analysis_tags: List<String>?,
 
     val labels: String?,  // This field contains sustainability info
-    val labels_tags: List<String>?
+    val labels_tags: List<String>?,
 
-
-
+    // Packaging degradability
+    val packagings: List<Packaging>?
 )
+

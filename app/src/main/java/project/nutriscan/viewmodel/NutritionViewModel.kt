@@ -12,15 +12,18 @@ import project.nutriscan.model.Product
 import project.nutriscan.repository.ProductRepository
 import project.nutriscan.repository.Repository
 
-class NutritionViewModel(private val repository: Repository,
-                         private val productRepository: ProductRepository,
-                         private val application: Application) : AndroidViewModel(application) {
+class NutritionViewModel(
+    private val repository: Repository,
+    private val productRepository: ProductRepository,
+    private val application: Application
+) : AndroidViewModel(application) {
 
-  val productDetails : MutableLiveData<NutritionResponse> = MutableLiveData()
+    val productDetails: MutableLiveData<NutritionResponse> = MutableLiveData()
 
-    fun searchProduct(barcode : String, fields : String) = viewModelScope.launch {
-        val response = repository.searchProduct(barcode,fields)
-        if (response.isSuccessful){
+
+    fun searchProduct(barcode: String, fields: String) = viewModelScope.launch {
+        val response = repository.searchProduct(barcode, fields)
+        if (response.isSuccessful) {
             response.body()?.let {
                 productDetails.postValue(it)
             }
@@ -85,6 +88,38 @@ class NutritionViewModel(private val repository: Repository,
     fun checkIfProductSaved(barcode: String) {
         viewModelScope.launch {
             _isProductSaved.value = productRepository.isProductSaved(barcode)
+        }
+    }
+
+
+    // Packaging degradability LiveData
+    private val _isDegradable = MutableLiveData<Boolean>()
+    val isDegradable: LiveData<Boolean> = _isDegradable
+
+    private val _degradableText = MutableLiveData<String>()
+    val degradableText: LiveData<String> = _degradableText
+
+    private fun analyzePackaging(product: Product?) {
+        val packagings = product?.packagings
+
+        if (packagings.isNullOrEmpty()) {
+            _isDegradable.value = false
+            _degradableText.value = "No packaging information available"
+        } else {
+            val allDegradable = packagings.all {
+                it.nonRecyclableAndNonBiodegradable == "no"
+            }
+
+            _isDegradable.value = allDegradable
+
+            _degradableText.value = if (allDegradable) {
+                "✓ Packaging is Recyclable/Biodegradable"
+            } else {
+                val degradableCount = packagings.count {
+                    it.nonRecyclableAndNonBiodegradable == "no"
+                }
+                "⚠ $degradableCount of ${packagings.size} components are degradable"
+            }
         }
     }
 }

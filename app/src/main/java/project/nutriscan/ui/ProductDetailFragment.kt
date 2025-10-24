@@ -3,11 +3,14 @@ package project.nutriscan.ui
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -47,6 +50,9 @@ class ProductDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentProductDetailBinding.inflate(inflater)
 
+        //
+        binding.lifecycleOwner = viewLifecycleOwner
+
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Product Details"
 
         //API Call to retrieve data.
@@ -75,7 +81,8 @@ class ProductDetailFragment : Fragment() {
                     // Additional useful fields
                     "ingredients_tags," +
                     "labels," +
-                    "labels_tags"
+                    "labels_tags," +
+                    "packagings"
         )
 
         //Observing and Mapping Values.
@@ -217,6 +224,10 @@ class ProductDetailFragment : Fragment() {
                 "Grade: ${it.product?.ecoscore_grade ?: "Not Found"}"
             binding.ecoscoreScore.text =
                 "Score: ${it.product?.ecoscore_score ?: "Not Found"}"
+
+
+            //Packaging Info
+            displayPackagingInfo(it.product)
 
         })
 
@@ -698,6 +709,157 @@ class ProductDetailFragment : Fragment() {
             }
         }
     }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun displayPackagingInfo(product: Product?) {
+        val packagings = product?.packagings
+
+        if (packagings.isNullOrEmpty()) {
+            binding.packagingCard.visibility = View.GONE
+            return
+        }
+
+        binding.packagingCard.visibility = View.VISIBLE
+
+        // Determine if recyclable
+        val recyclableCount = packagings.count { pkg ->
+            isRecyclableMaterial(pkg.material?.id)
+        }
+        val totalCount = packagings.size
+        val allRecyclable = recyclableCount == totalCount
+
+        // Set card colors
+        val cardColor = if (allRecyclable) {
+            Color.parseColor("#E8F5E9")
+        } else {
+            Color.parseColor("#FFF3E0")
+        }
+        binding.packagingCard.setCardBackgroundColor(cardColor)
+
+        val strokeColor = if (allRecyclable) {
+            Color.parseColor("#4CAF50")
+        } else {
+            Color.parseColor("#FF9800")
+        }
+        binding.packagingCard.strokeColor = strokeColor
+
+        // Set icon
+        binding.packagingIconText.text = if (allRecyclable) "♻️" else "⚠️"
+        binding.packagingIconText.textSize = 28f
+
+        // Set status text
+        binding.packagingStatusText.text = when {
+            allRecyclable && recyclableCount > 0 ->
+                "✓ All Components Recyclable ($recyclableCount/$totalCount)"
+            recyclableCount == 0 ->
+                "✗ Not Recyclable"
+            else ->
+                "⚠ Partially Recyclable ($recyclableCount/$totalCount)"
+        }
+
+        // Display component list
+        binding.packagingComponentsContainer.removeAllViews()
+
+        packagings.forEachIndexed { index, pkg ->
+            val isRecyclable = isRecyclableMaterial(pkg.material?.id)
+            val materialName = formatMaterialName(pkg.material?.id)
+            val shapeName = formatShapeName(pkg.shape?.id)
+
+            val itemView = TextView(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 8, 0, 8)
+                }
+
+                val icon = if (isRecyclable) "♻️" else "⚠️"
+                val status = if (isRecyclable) "Recyclable" else "Not Recyclable"
+
+                text = "$icon $materialName - $shapeName\n   $status"
+                textSize = 14f
+                setTextColor(Color.parseColor("#424242"))
+                setPadding(16, 12, 16, 12)
+
+                background = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    setColor(if (isRecyclable) {
+                        Color.parseColor("#E8F5E9")
+                    } else {
+                        Color.parseColor("#FFF3E0")
+                    })
+                    cornerRadius = 8f * resources.displayMetrics.density
+                }
+            }
+
+            binding.packagingComponentsContainer.addView(itemView)
+        }
+    }
+
+    private fun isRecyclableMaterial(materialId: String?): Boolean {
+        if (materialId == null) return false
+        val id = materialId.lowercase()
+        return when {
+            id.contains("pet-1") || id.contains("polyethylene-terephthalate") -> true
+            id.contains("pp-5") || id.contains("polypropylene") -> true
+            id.contains("hdpe") || id.contains("hdpe-2") -> true
+            id.contains("ldpe") || id.contains("ldpe-4") -> true
+            id.contains("paper") || id.contains("cardboard") || id.contains("carton") -> true
+            id.contains("glass") -> true
+            id.contains("aluminium") || id.contains("aluminum") || id.contains("steel") -> true
+            else -> false
+        }
+    }
+
+    private fun formatMaterialName(materialId: String?): String {
+        if (materialId == null) return "Unknown"
+
+        val id = materialId.lowercase()
+
+        // Return user-friendly names
+        return when {
+            // Metals
+            id.contains("steel") -> "Steel (Tinplate)"
+            id.contains("aluminium") || id.contains("aluminum") -> "Aluminum"
+            id.contains("metal") -> "Metal"
+
+            // Plastics with codes
+            id.contains("pet-1") -> "PET-1 (Polyethylene Terephthalate)"
+            id.contains("hdpe-2") -> "HDPE-2 (High-Density Polyethylene)"
+            id.contains("pvc-3") -> "PVC-3 (Polyvinyl Chloride)"
+            id.contains("ldpe-4") -> "LDPE-4 (Low-Density Polyethylene)"
+            id.contains("pp-5") -> "PP-5 (Polypropylene)"
+            id.contains("ps-6") -> "PS-6 (Polystyrene)"
+
+            // Generic plastic
+            id.contains("plastic") -> "Plastic (Type Unknown)"
+
+            // Paper products
+            id.contains("paper") -> "Paper"
+            id.contains("cardboard") -> "Cardboard"
+            id.contains("carton") -> "Carton"
+
+            // Glass
+            id.contains("glass") -> "Glass"
+
+            // Default: format nicely
+            else -> materialId
+                .removePrefix("en:")
+                .replace("-", " ")
+                .split(" ")
+                .joinToString(" ") { word -> word.replaceFirstChar { it.uppercase() } }
+        }
+    }
+
+    private fun formatShapeName(shapeId: String?): String {
+        if (shapeId == null) return "Unknown"
+        return shapeId
+            .removePrefix("en:")
+            .replace("-", " ")
+            .replaceFirstChar { it.uppercase() }
+    }
+
 
 
     override fun onDestroyView() {

@@ -308,6 +308,10 @@
     <color name="score_below_average">#EE8100</color>
     <color name="score_poor">#E63E11</color>
 
+    <!-- hex in binding adapters -->
+    <color name="text_primary_BA">#212121</color>
+    <color name="text_secondary_BA">#757575</color>
+
 </resources>
 
 
