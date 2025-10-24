@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -140,9 +141,25 @@ class ProductDetailFragment : Fragment() {
                 "Fiber: " + (it.product?.nutriments?.fiber?.toString() ?: "Not Found") +
                         (it.product?.nutriments?.fiber_unit ?: "")
 
-            binding.nutritionalScore.text =
-                "Nutritional Score: " + (it.product?.nutriments?.nutrition_score_fr?.toString()
-                    ?: "Not Found")
+//            binding.nutritionalScore.text =
+//                "Nutritional Score: " + (it.product?.nutriments?.nutrition_score_fr?.toString()
+//                    ?: "Not Found")
+
+            it.product?.nutriments?.nutrition_score_fr?.let { score ->
+                // Convert Double to Int
+                val scoreInt = score.toInt()
+                // Set the text
+                binding.nutritionalScore.text = "Nutritional Score: $scoreInt/100"
+                // Set dynamic card background color
+                binding.nutritionalScoreCard.setCardBackgroundColor(getScoreColor(scoreInt))
+                // Set text color for readability
+                binding.nutritionalScore.setTextColor(getScoreTextColor(scoreInt))
+            } ?: run {
+                // Handle null case
+                binding.nutritionalScore.text = "Nutritional Score: Not Found"
+                binding.nutritionalScoreCard.setCardBackgroundColor(Color.parseColor("#9E9E9E"))
+                binding.nutritionalScore.setTextColor(Color.WHITE)
+            }
 
             binding.proteins.text =
                 "Protein: " + (it.product?.nutriments?.proteins?.toString() ?: "Not Found") +
@@ -203,14 +220,14 @@ class ProductDetailFragment : Fragment() {
 
         })
 
-       //DB Operations
+        //DB Operations
         viewmodel.isProductSaved.observe(viewLifecycleOwner) { isSaved ->
             isSaved?.let {
                 updateSaveButton(it)
             }
         }
 
-      // Setup button
+        // Setup button
         setupSaveButton()
 
         return binding.root
@@ -307,12 +324,12 @@ class ProductDetailFragment : Fragment() {
             "soy", "soya", "soybeans" -> "Soy and Soy Products"
             "fish" -> "Fish and Fish Products"
             "shellfish" -> "Crustaceans and Mollusks"
-            "sesame","sesame-seeds" -> "Sesame Seeds and Oil"
+            "sesame", "sesame-seeds" -> "Sesame Seeds and Oil"
             "wheat" -> "Wheat and Wheat Products"
             "celery" -> "Celery and Celeriac"
             "mustard" -> "Mustard Seeds and Powder"
             "lupin" -> "Lupin Beans and Flour"
-            "sulfites", "sulphites", "sulphur-dioxide-and-sulphites"-> "Sulfur Dioxide and Sulfites"
+            "sulfites", "sulphites", "sulphur-dioxide-and-sulphites" -> "Sulfur Dioxide and Sulfites"
             else -> "Unknown Allergen"
         }
     }
@@ -365,7 +382,8 @@ class ProductDetailFragment : Fragment() {
         val mayContainCount = product.ingredients_that_may_be_from_palm_oil_n ?: 0
 
         // FALLBACK: Check ingredients text for palm oil keywords
-        val ingredientsText = (product.ingredients_text_en ?: product.ingredients_text ?: "").lowercase()
+        val ingredientsText =
+            (product.ingredients_text_en ?: product.ingredients_text ?: "").lowercase()
         val ingredientsTags = product.ingredients_tags ?: emptyList()
 
         // Check if palm oil is mentioned in text or tags
@@ -428,15 +446,17 @@ class ProductDetailFragment : Fragment() {
                     ?: extractPalmOilFromTags(ingredientsTags)
 
                 if (ingredients.isNotEmpty()) {
-                    val formattedIngredients = ingredients.take(3).joinToString(", ") { ingredient ->
-                        ingredient.replace("en:", "")
-                            .replace("-", " ")
-                            .replace("_", " ")
-                            .split(" ")
-                            .joinToString(" ") { it.capitalize() }
-                    }
+                    val formattedIngredients =
+                        ingredients.take(3).joinToString(", ") { ingredient ->
+                            ingredient.replace("en:", "")
+                                .replace("-", " ")
+                                .replace("_", " ")
+                                .split(" ")
+                                .joinToString(" ") { it.capitalize() }
+                        }
                     val more = if (ingredients.size > 3) " and ${ingredients.size - 3} more" else ""
-                    binding.palmOilCount.text = "${message}\n\nIngredients:\n$formattedIngredients$more"
+                    binding.palmOilCount.text =
+                        "${message}\n\nIngredients:\n$formattedIngredients$more"
                 }
 
                 // Add sustainability badge
@@ -455,24 +475,28 @@ class ProductDetailFragment : Fragment() {
             // CASE 2: May contain palm oil
             mayContainCount > 0 -> {
                 binding.mayContainPalmOilLayout.visibility = View.VISIBLE
-                binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s) may contain palm oil"
+                binding.mayContainPalmOilCount.text =
+                    "$mayContainCount ingredient(s) may contain palm oil"
 
                 val ingredients = product.ingredients_that_may_be_from_palm_oil_tags
                     ?: product.ingredients_that_may_be_from_palm_oil
                     ?: emptyList()
 
                 if (ingredients.isNotEmpty()) {
-                    val formattedIngredients = ingredients.take(3).joinToString(", ") { ingredient ->
-                        ingredient.replace("en:", "").replace("-", " ")
-                            .split(" ").joinToString(" ") { it.capitalize() }
-                    }
+                    val formattedIngredients =
+                        ingredients.take(3).joinToString(", ") { ingredient ->
+                            ingredient.replace("en:", "").replace("-", " ")
+                                .split(" ").joinToString(" ") { it.capitalize() }
+                        }
                     val more = if (ingredients.size > 3) " and ${ingredients.size - 3} more" else ""
-                    binding.mayContainPalmOilCount.text = "$mayContainCount ingredient(s):\n$formattedIngredients$more"
+                    binding.mayContainPalmOilCount.text =
+                        "$mayContainCount ingredient(s):\n$formattedIngredients$more"
                 }
 
                 if (isSustainable) {
-                    binding.mayContainPalmOilCount.text = binding.mayContainPalmOilCount.text.toString() +
-                            "\n\n✓ Sustainable sources possible"
+                    binding.mayContainPalmOilCount.text =
+                        binding.mayContainPalmOilCount.text.toString() +
+                                "\n\n✓ Sustainable sources possible"
                 }
             }
 
@@ -554,10 +578,12 @@ class ProductDetailFragment : Fragment() {
         }
 
         // Method 2: Check ingredients text
-        val ingredientsText = (product.ingredients_text_en ?: product.ingredients_text ?: "").lowercase()
+        val ingredientsText =
+            (product.ingredients_text_en ?: product.ingredients_text ?: "").lowercase()
         if (ingredientsText.contains("palm oil") ||
             ingredientsText.contains("palm kernel") ||
-            ingredientsText.contains("palm fat")) {
+            ingredientsText.contains("palm fat")
+        ) {
             Log.d("PalmOilDetect", "Detected via ingredients text")
             return true
         }
@@ -571,8 +597,10 @@ class ProductDetailFragment : Fragment() {
 
         // Method 4: Check analysis tags
         val analysisTags = product.ingredients_analysis_tags ?: emptyList()
-        if (analysisTags.any { it.contains("palm-oil", ignoreCase = true) &&
-                    !it.contains("free", ignoreCase = true) }) {
+        if (analysisTags.any {
+                it.contains("palm-oil", ignoreCase = true) &&
+                        !it.contains("free", ignoreCase = true)
+            }) {
             Log.d("PalmOilDetect", "Detected via analysis tags")
             return true
         }
@@ -589,13 +617,13 @@ class ProductDetailFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun navigateToAllergensDetail(allergens : String){
+    private fun navigateToAllergensDetail(allergens: String) {
         val action = ProductDetailFragmentDirections
             .actionProductDetailFragmentToAllergenDetails(allergens ?: "")
         findNavController().navigate(action)
     }
 
-//RoomDB
+    //RoomDB
     private fun setupSaveButton() {
         binding.saveProductButton.setOnClickListener {
             toggleSaveProduct()
@@ -604,7 +632,8 @@ class ProductDetailFragment : Fragment() {
 
     private fun toggleSaveProduct() {
         if (currentProduct == null || currentBarcode == null) {
-            Toast.makeText(requireContext(), "Product data not available", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Product data not available", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -624,6 +653,37 @@ class ProductDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Saved to favorites ✓", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+    // Score Color - returns actual color Int
+    private fun getScoreColor(score: Int): Int {
+        return when (score) {
+            in 0..30 -> ContextCompat.getColor(requireContext(), R.color.score_poor)   // Red - Poor
+            in 31..50 -> ContextCompat.getColor(
+                requireContext(),
+                R.color.score_below_average
+            )   // Orange - Below Average
+            in 51..70 -> ContextCompat.getColor(
+                requireContext(),
+                R.color.score_average
+            )   // Yellow - Average
+            in 71..85 -> ContextCompat.getColor(
+                requireContext(),
+                R.color.score_good
+            )   // Light Green - Good
+            in 86..100 -> ContextCompat.getColor(
+                requireContext(),
+                R.color.score_excellent
+            ) // Dark Green - Excellent
+            else -> "#9E9E9E".toColorInt()        // Gray - Not Found/Invalid
+        }
+    }
+
+    private fun getScoreTextColor(score: Int): Int {
+        // Use black text for yellow background (51-70), white for others
+        return if (score in 51..70) Color.BLACK else Color.WHITE
+    }
+
 
     private fun updateSaveButton(isSaved: Boolean) {
         binding.saveProductButton.apply {

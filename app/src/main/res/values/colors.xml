@@ -295,12 +295,20 @@
     <color name="cert_card_background">#F0F9FF</color>
 
 
-<!--Palm Oil Colors-->
-        <color name="palm_oil_red">#D32F2F</color>
-        <color name="palm_oil_orange">#F57C00</color>
-        <color name="palm_oil_green">#388E3C</color>
-        <color name="palm_oil_gray">#757575</color>
-    </resources>
+    <!--Palm Oil Colors-->
+    <color name="palm_oil_red">#D32F2F</color>
+    <color name="palm_oil_orange">#F57C00</color>
+    <color name="palm_oil_green">#388E3C</color>
+    <color name="palm_oil_gray">#757575</color>
+
+    <!--NutritionScore Colors-->
+    <color name="score_excellent">#038141</color>
+    <color name="score_good">#85BB2F</color>
+    <color name="score_average">#FECB02</color>
+    <color name="score_below_average">#EE8100</color>
+    <color name="score_poor">#E63E11</color>
+
+</resources>
 
 
 
