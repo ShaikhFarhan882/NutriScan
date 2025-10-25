@@ -312,6 +312,37 @@
     <color name="text_primary_BA">#212121</color>
     <color name="text_secondary_BA">#757575</color>
 
+
+    <!-- Existing colors -->
+    <color name="background_ab">#FCFCF9</color>
+    <color name="white_ab">#FFFFFF</color>
+    <color name="text_primary_ab">#1F2121</color>
+    <color name="text_secondary_ab">#626C71</color>
+
+    <!-- Risk level colors -->
+    <color name="risk_high_ab">#C0152F</color>
+    <color name="risk_medium_ab">#E68161</color>
+    <color name="risk_low_ab">#21808D</color>
+    <color name="risk_variable_ab">#626C71</color>
+    <color name="risk_unknown_ab">#A7A9A9</color>
+
+    <!-- Safe colors -->
+    <color name="safe_green_ab">#22B85A</color>
+    <color name="safe_background_ab">#E8F5E9</color>
+    <color name="safe_stroke_ab">#81C784</color>
+
+    <!-- Warning colors -->
+    <color name="warning_background_ab">#FFF3E0</color>
+    <color name="allergen_warning_ab">#E65100</color>
+
+    <!-- User allergen danger colors -->
+    <color name="user_allergen_danger_background_ab">#FFEBEE</color>
+    <color name="user_allergen_background_ab">#FFCDD2</color>
+
+    <!-- Card colors -->
+    <color name="allergen_summary_background_ab">#FFFFFF</color>
+    <color name="allergen_card_stroke_ab">#E0E0E0</color>
+
 </resources>
 
 

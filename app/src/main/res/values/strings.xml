@@ -19,4 +19,10 @@
     <string name="palm_oil_drop">Palm Oil Drop</string>
     <string name="palm_tree">Palm Tree</string>
     <string name="no_palm_oil">No Palm Oil</string>
+
+    <!-- Emoji Resources -->
+    <string name="warning_emoji">⚠️</string>
+    <string name="check_mark">✅</string>
+    <string name="cross_mark">❌</string>
+    <string name="bullet_point">•</string>
 </resources>

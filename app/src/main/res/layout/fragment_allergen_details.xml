@@ -25,18 +25,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Summary Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/summary_card"
+        <!-- ScrollView for Better Content Flow -->
+        <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardBackgroundColor="@color/allergen_summary_background"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:strokeColor="@color/allergen_card_stroke"
-            app:strokeWidth="1dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -46,144 +41,287 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <LinearLayout
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/main_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/allergen_summary_background"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@color/allergen_card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/user_allergen_warning_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@color/user_allergen_danger_background_ab"
+                            android:padding="16dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <!-- Alert Header -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="12dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/warning_emoji"
+                                    android:textSize="24sp"
+                                    android:layout_marginEnd="8dp" />
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="DO NOT CONSUME!"
+                                    android:textColor="@color/risk_high"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.05" />
+
+                            </LinearLayout>
+
+                            <!-- Count Text -->
+                            <TextView
+                                android:id="@+id/user_allergen_count_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="8dp"
+                                tools:text="Contains 2 of YOUR allergens" />
+
+                            <!-- User Allergens List -->
+                            <TextView
+                                android:id="@+id/user_allergens_list"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/risk_high"
+                                android:textSize="13sp"
+                                android:lineSpacingExtra="2dp"
+                                android:layout_marginBottom="12dp"
+                                tools:text="• Milk and Dairy Products\n• Tree Nuts (Various)" />
+
+                            <!-- Edit Preferences Button -->
+                            <Button
+                                android:id="@+id/edit_preferences_button"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Edit Dietary Preferences"
+                                android:textColor="@color/risk_high"
+                                android:textSize="12sp"
+                                android:minHeight="36dp"
+                                android:paddingHorizontal="12dp" />
+
+                        </LinearLayout>
+
+                        <!-- SAFE MESSAGE (shown if NO user allergens) -->
+                        <LinearLayout
+                            android:id="@+id/user_safe_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:background="@color/safe_background"
+                            android:padding="16dp"
+                            android:gravity="center_vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_mark"
+                                android:textSize="20sp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Safe for your dietary preferences"
+                                android:textColor="@color/safe_green"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- Divider between sections -->
+                        <View
+                            android:id="@+id/section_divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/allergen_card_stroke"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+
+                        <LinearLayout
+                            android:id="@+id/summary_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Summary Header with Count Badge -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="12dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="ALLERGEN SUMMARY"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.05" />
+
+                                <TextView
+                                    android:id="@+id/allergen_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/allergen_warning"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:background="@drawable/count_badge_background"
+                                    android:paddingHorizontal="10dp"
+                                    android:paddingVertical="4dp"
+                                    tools:text="5 allergens" />
+
+                            </LinearLayout>
+
+                            <!-- Summary Details -->
+                            <TextView
+                                android:id="@+id/allergen_summary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp"
+                                android:lineSpacingExtra="2dp"
+                                tools:text="Total Allergens: 5\nHigh Risk: 2\nMedium Risk: 2\nLow Risk: 1" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- General Warning Card (for high-risk allergens) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/warning_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/warning_background"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:strokeColor="@color/risk_high"
+                    app:strokeWidth="1dp">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:id="@+id/warning_text"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Allergen Summary"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/allergen_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5 allergens"
-                        android:textColor="@color/allergen_warning"
-                        android:textSize="14sp"
+                        android:padding="12dp"
+                        android:textColor="@color/risk_high"
+                        android:textSize="12sp"
                         android:textStyle="bold"
-                        android:background="@drawable/count_badge_background"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp" />
+                        tools:text="⚠️ Contains 2 high-risk allergens that may cause severe reactions" />
 
-                </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
+                <!-- Section Header for Detailed List -->
                 <TextView
-                    android:id="@+id/allergen_summary"
+                    android:id="@+id/details_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Summary of detected allergens"
-                    android:textColor="@color/text_secondary"
+                    android:text="All Detected Allergens"
+                    android:textColor="@color/text_primary"
                     android:textSize="14sp"
-                    android:lineSpacingExtra="2dp" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Warning Card (shown only for high-risk allergens) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/warning_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="8dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/warning_background"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:strokeColor="@color/risk_high"
-            app:strokeWidth="2dp"
-            app:layout_constraintTop_toBottomOf="@id/summary_card"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/warning_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="⚠️ Contains high-risk allergens that may cause severe reactions"
-                    android:textColor="@color/risk_high"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="8dp"
-            android:id="@+id/recyclerview"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="16dp"
-            android:clipToPadding="false"
-            android:scrollbars="vertical"
-            tools:listitem="@layout/item_allergen_detail"
-            app:layout_constraintTop_toBottomOf="@id/warning_card"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- No Allergens Card (shown when no allergens detected) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/no_allergens_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/safe_background"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:strokeColor="@color/safe_stroke"
-            app:strokeWidth="1dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="32dp"
-                android:gravity="center">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No Known Allergens"
-                    android:textColor="@color/safe_green"
-                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="12dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- RecyclerView for Allergen Details -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="This product appears to be free from common allergens"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="2dp" />
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_allergen_detail"
+                    tools:itemCount="3" />
+
+                <!-- No Allergens Card (shown when no allergens detected) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/no_allergens_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/safe_background"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@color/safe_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="32dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/check_mark"
+                            android:textSize="48sp"
+                            android:layout_marginBottom="12dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="No Known Allergens"
+                            android:textColor="@color/safe_green"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="This product appears to be free from common allergens"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp"
+                            android:gravity="center"
+                            android:lineSpacingExtra="2dp" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -3,6 +3,7 @@ package project.nutriscan.utils
 
 import project.nutriscan.R
 import project.nutriscan.model.AllergenInfo
+import project.nutriscan.model.UserPreferences
 
 object AllergenUtils {
 
@@ -175,13 +176,63 @@ object AllergenUtils {
     }
 
 
-    fun parseAllergensToDetailedList(allergens: String?): List<AllergenInfo> {
+//    fun parseAllergensToDetailedList(allergens: String?): List<AllergenInfo> {
+//        if (allergens.isNullOrEmpty()) return emptyList()
+//
+//        return allergens.split(",")
+//            .map { it.trim() }
+//            .filter { it.isNotEmpty() }
+//            .map { getFullAllergenInfo(it) }
+//    }
+
+    fun parseAllergensToDetailedList(
+        allergens: String?,
+        userPrefs: UserPreferences
+    ): List<AllergenInfo> {
         if (allergens.isNullOrEmpty()) return emptyList()
 
         return allergens.split(",")
             .map { it.trim() }
             .filter { it.isNotEmpty() }
-            .map { getFullAllergenInfo(it) }
+            .map { allergenCode ->
+                val info = getFullAllergenInfo(allergenCode)
+                // Check if this allergen matches user's preferences
+                val isUserAllergen = checkIfUserAllergen(allergenCode, userPrefs)
+
+                // Return AllergenInfo with isUserAllergen flag
+                info.copy(isUserAllergen = isUserAllergen)
+            }
     }
+
+    // Helper function to check if allergen matches user preferences
+    private fun checkIfUserAllergen(allergenCode: String, userPrefs: UserPreferences): Boolean {
+        val normalized = allergenCode.replace("en:", "").trim().lowercase()
+
+        return when {
+            // Check for gluten
+            normalized.contains("gluten") || normalized.contains("wheat") ->
+                userPrefs.allergenPreferences["gluten"] == true
+
+            // Check for nuts
+            normalized.contains("nut") || normalized.contains("peanut") ||
+                    normalized.contains("almond") || normalized.contains("cashew") ||
+                    normalized.contains("walnut") || normalized.contains("hazelnut") ->
+                userPrefs.allergenPreferences["nuts"] == true
+
+            // Check for milk/dairy
+            normalized.contains("milk") || normalized.contains("dairy") ||
+                    normalized.contains("lactose") || normalized.contains("casein") ||
+                    normalized.contains("whey") ->
+                userPrefs.allergenPreferences["milk"] == true
+
+            // Check for soy
+            normalized.contains("soy") || normalized.contains("soya") ||
+                    normalized.contains("soybean") ->
+                userPrefs.allergenPreferences["soybeans"] == true
+
+            else -> false
+        }
+    }
+
 
 }

@@ -7,5 +7,7 @@ data class AllergenInfo(
     val riskLevel: String,
     val description: String,
     val symptoms: String,
-    val avoidanceAdvice: String
+    val avoidanceAdvice: String,
+
+    val isUserAllergen: Boolean = false
 )

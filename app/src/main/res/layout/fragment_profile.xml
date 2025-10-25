@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-    </data>
+    <data></data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,25 +35,15 @@
                     android:padding="24dp"
                     android:gravity="center">
 
-                    <!-- Profile Picture with Edit Icon -->
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/profile_image"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:src="@drawable/ic_profile_24"
-                            app:civ_border_width="4dp"
-                            app:civ_border_color="?attr/colorPrimary"
-                            android:contentDescription="Profile Image"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- Profile Picture -->
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/ic_profile_24"
+                        app:civ_border_width="4dp"
+                        app:civ_border_color="?attr/colorPrimary"
+                        android:contentDescription="Profile Image" />
 
                     <!-- Email Display -->
                     <TextView
@@ -74,10 +63,10 @@
 
             <!-- Personal Information Card -->
             <com.google.android.material.card.MaterialCardView
-                android:layout_marginTop="10dp"
                 android:id="@+id/personal_info_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="1dp"
@@ -93,7 +82,6 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Section Title -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -101,8 +89,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="?attr/colorOnSurface"
-                        android:drawablePadding="8dp"
-                        android:drawableTint="?attr/colorPrimary"
                         android:layout_marginBottom="16dp" />
 
                     <!-- Username Input -->
@@ -115,7 +101,6 @@
                         app:boxCornerRadiusTopEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusBottomEnd="12dp"
-                        app:startIconTint="?attr/colorPrimary"
                         app:counterEnabled="true"
                         app:counterMaxLength="15"
                         android:layout_marginBottom="12dp">
@@ -140,7 +125,6 @@
                         app:boxCornerRadiusTopEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusBottomEnd="12dp"
-                        app:startIconTint="?attr/colorPrimary"
                         app:counterEnabled="true"
                         app:counterMaxLength="120">
 
@@ -161,10 +145,10 @@
 
             <!-- Dietary Preferences Card -->
             <com.google.android.material.card.MaterialCardView
-                android:layout_marginTop="10dp"
                 android:id="@+id/dietary_preferences_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="1dp"
@@ -180,52 +164,82 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Section Title -->
+                    <!-- Section Title with Subtitle -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Dietary Preferences"
+                        android:text="Allergen Preferences"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="?attr/colorOnSurface"
-                        android:drawablePadding="8dp"
-                        android:drawableTint="?attr/colorPrimary"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select allergens you want to avoid"
+                        android:textSize="13sp"
+                        android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- Allergens in Grid Layout -->
+                    <!-- All 11 Allergens in 2-Column Grid -->
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:columnCount="2"
-                        android:rowCount="2">
+                        android:alignmentMode="alignBounds"
+                        android:columnOrderPreserved="false">
 
+                        <!-- Row 1 -->
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/allergen_gluten"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
                             android:text="Gluten Free"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:padding="8dp"
                             app:buttonTint="?attr/colorPrimary" />
 
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_milk"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Milk Free"
+                            android:textSize="15sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <!-- Row 2 -->
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_eggs"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Egg Free"
+                            android:textSize="15sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_peanuts"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Peanut Free"
+                            android:textSize="15sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <!-- Row 3 -->
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/allergen_nuts"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Nut Free"
-                            android:textSize="16sp"
-                            android:padding="8dp"
-                            app:buttonTint="?attr/colorPrimary" />
-
-                        <com.google.android.material.checkbox.MaterialCheckBox
-                            android:id="@+id/allergen_dairy"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:text="Dairy Free"
-                            android:textSize="16sp"
+                            android:text="Tree Nut Free"
+                            android:textSize="15sp"
                             android:padding="8dp"
                             app:buttonTint="?attr/colorPrimary" />
 
@@ -235,7 +249,49 @@
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
                             android:text="Soy Free"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <!-- Row 4 -->
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_fish"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Fish Free"
+                            android:textSize="15sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_shellfish"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Shellfish Free"
+                            android:textSize="15sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <!-- Row 5 -->
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_sesame"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Sesame Free"
+                            android:textSize="15sp"
+                            android:padding="8dp"
+                            app:buttonTint="?attr/colorPrimary" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/allergen_wheat"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:text="Wheat Free"
+                            android:textSize="15sp"
                             android:padding="8dp"
                             app:buttonTint="?attr/colorPrimary" />
 
