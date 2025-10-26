@@ -91,7 +91,7 @@ object AllergenUtils {
                 avoidanceAdvice = "Avoid all shellfish. Be cautious in seafood restaurants due to cross-contamination.",
             )
 
-            "sesame","sesame-seeds" -> AllergenInfo(
+            "sesame", "sesame-seeds" -> AllergenInfo(
                 code = "Sesame",
                 fullName = "Sesame Seeds and Oil",
                 category = "Seed",
@@ -141,7 +141,7 @@ object AllergenUtils {
                 avoidanceAdvice = "Be cautious if you have peanut allergies. Check bread and baked goods.",
             )
 
-            "sulfites", "sulphites", "sulphur-dioxide-and-sulphites"-> AllergenInfo(
+            "sulfites", "sulphites", "sulphur-dioxide-and-sulphites" -> AllergenInfo(
                 code = "Sulfites",
                 fullName = "Sulfur Dioxide and Sulfites",
                 category = "Preservative",
@@ -160,7 +160,7 @@ object AllergenUtils {
                 symptoms = "Varies depending on individual sensitivity",
                 avoidanceAdvice = "Consult with healthcare provider or allergist for specific guidance.",
 
-            )
+                )
         }
     }
 
@@ -175,15 +175,6 @@ object AllergenUtils {
             .count()
     }
 
-
-//    fun parseAllergensToDetailedList(allergens: String?): List<AllergenInfo> {
-//        if (allergens.isNullOrEmpty()) return emptyList()
-//
-//        return allergens.split(",")
-//            .map { it.trim() }
-//            .filter { it.isNotEmpty() }
-//            .map { getFullAllergenInfo(it) }
-//    }
 
     fun parseAllergensToDetailedList(
         allergens: String?,
@@ -209,26 +200,42 @@ object AllergenUtils {
         val normalized = allergenCode.replace("en:", "").trim().lowercase()
 
         return when {
-            // Check for gluten
+            // Gluten
             normalized.contains("gluten") || normalized.contains("wheat") ->
-                userPrefs.allergenPreferences["gluten"] == true
+                userPrefs.allergenPreferences["gluten"] == true ||
+                        userPrefs.allergenPreferences["wheat"] == true
 
-            // Check for nuts
-            normalized.contains("nut") || normalized.contains("peanut") ||
-                    normalized.contains("almond") || normalized.contains("cashew") ||
-                    normalized.contains("walnut") || normalized.contains("hazelnut") ->
-                userPrefs.allergenPreferences["nuts"] == true
+            // Nuts (Tree nuts and Peanuts)
+            normalized.contains("nut") && !normalized.contains("coconut") ->
+                userPrefs.allergenPreferences["nuts"] == true ||
+                        userPrefs.allergenPreferences["peanuts"] == true
 
-            // Check for milk/dairy
+            // Milk/Dairy
             normalized.contains("milk") || normalized.contains("dairy") ||
                     normalized.contains("lactose") || normalized.contains("casein") ||
                     normalized.contains("whey") ->
                 userPrefs.allergenPreferences["milk"] == true
 
-            // Check for soy
-            normalized.contains("soy") || normalized.contains("soya") ||
-                    normalized.contains("soybean") ->
+            // Soy
+            normalized.contains("soy") || normalized.contains("soybean") ->
                 userPrefs.allergenPreferences["soybeans"] == true
+
+            // SESAME
+            normalized.contains("sesame") ->
+                userPrefs.allergenPreferences["sesame-seeds"] == true
+
+            // EGGS
+            normalized.contains("egg") ->
+                userPrefs.allergenPreferences["eggs"] == true
+
+            //FISH
+            normalized.contains("fish") ->
+                userPrefs.allergenPreferences["fish"] == true
+
+            //SHELLFISH
+            normalized.contains("shellfish") || normalized.contains("crustacean") ||
+                    normalized.contains("mollusc") ->
+                userPrefs.allergenPreferences["shellfish"] == true
 
             else -> false
         }
