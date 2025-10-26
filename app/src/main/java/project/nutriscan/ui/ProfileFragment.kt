@@ -28,6 +28,12 @@ class ProfileFragment : Fragment() {
         private const val KEY_USERNAME = "username"
         private const val KEY_BIO = "bio"
 
+        //Health Goals
+        private const val KEY_HEALTH_DIABETES = "health_diabetes"
+        private const val KEY_HEALTH_HEART = "health_heart"
+        private const val KEY_HEALTH_WEIGHT_LOSS = "health_weight_loss"
+        private const val KEY_HEALTH_LOW_SODIUM = "health_low_sodium"
+
         // All 11 Allergen Keys (matching UserPreferences.AllergenCodes)
         private const val KEY_ALLERGEN_GLUTEN = "allergen_gluten"
         private const val KEY_ALLERGEN_MILK = "allergen_milk"
@@ -52,9 +58,6 @@ class ProfileFragment : Fragment() {
 
         // Load saved preferences
         loadUserPreferences()
-
-        // Set email (you can load this from SharedPreferences or AuthViewModel)
-        binding.emailTextView.text = "johndoe@gmail.com"
 
         // Setup click listeners
         setupClickListeners()
@@ -85,7 +88,7 @@ class ProfileFragment : Fragment() {
 
     private fun saveUserPreferences() {
         val username = binding.usernameProfile.text.toString().trim()
-        val bio = binding.bioProfile.text.toString().trim()
+//        val bio = binding.bioProfile.text.toString().trim()
 
         // Validate username
         if (username.isEmpty()) {
@@ -99,7 +102,13 @@ class ProfileFragment : Fragment() {
         sharedPreferences.edit().apply {
             // Save personal info
             putString(KEY_USERNAME, username)
-            putString(KEY_BIO, bio)
+            //putString(KEY_BIO, bio)
+
+            //Save Health Goals
+            putBoolean(KEY_HEALTH_DIABETES, binding.checkboxDiabetes.isChecked)
+            putBoolean(KEY_HEALTH_HEART, binding.checkboxHeartHealth.isChecked)
+            putBoolean(KEY_HEALTH_WEIGHT_LOSS, binding.checkboxWeightLoss.isChecked)
+            putBoolean(KEY_HEALTH_LOW_SODIUM, binding.checkboxLowSodium.isChecked)
 
             // Save all 11 allergen preferences
             putBoolean(KEY_ALLERGEN_GLUTEN, binding.allergenGluten.isChecked)
@@ -171,7 +180,13 @@ class ProfileFragment : Fragment() {
         val bio = sharedPreferences.getString(KEY_BIO, "") ?: ""
 
         binding.usernameProfile.setText(username)
-        binding.bioProfile.setText(bio)
+        //binding.bioProfile.setText(bio)
+
+        //Load Health Goals
+        binding.checkboxDiabetes.isChecked = sharedPreferences.getBoolean(KEY_HEALTH_DIABETES, false)
+        binding.checkboxHeartHealth.isChecked = sharedPreferences.getBoolean(KEY_HEALTH_HEART, false)
+        binding.checkboxWeightLoss.isChecked = sharedPreferences.getBoolean(KEY_HEALTH_WEIGHT_LOSS, false)
+        binding.checkboxLowSodium.isChecked = sharedPreferences.getBoolean(KEY_HEALTH_LOW_SODIUM, false)
 
         // Load all 11 allergen checkboxes
         binding.allergenGluten.isChecked =

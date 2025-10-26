@@ -24,6 +24,7 @@ import project.nutriscan.MainActivity
 import project.nutriscan.R
 import project.nutriscan.databinding.FragmentProductDetailBinding
 import project.nutriscan.model.Product
+import project.nutriscan.utils.HealthChecker
 import project.nutriscan.utils.UtilityFunctions.Companion.getAdditiveFullName
 import project.nutriscan.viewmodel.NutritionViewModel
 
@@ -204,6 +205,14 @@ class ProductDetailFragment : Fragment() {
 
             val allergensTags = (it?.product?.allergens)
             displayAllergensTags(allergensTags)
+
+            //Health Goals
+            HealthChecker.checkAndDisplay(
+                currentProduct,
+                binding.healthWarningsCard,
+                binding.healthWarningsContainer,
+                requireContext()
+            )
 
 
             //Product Image

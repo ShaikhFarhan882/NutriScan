@@ -343,6 +343,10 @@
     <color name="allergen_summary_background_ab">#FFFFFF</color>
     <color name="allergen_card_stroke_ab">#E0E0E0</color>
 
+    <!-- Health Warning Colors -->
+    <color name="warning_orange">#FF9800</color>
+
+
 </resources>
 
 

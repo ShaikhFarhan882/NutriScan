@@ -270,6 +270,96 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+
+            <!-- Health Warnings Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/health_warnings_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/pastel_yellow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Product_Info_Card"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <!-- Header Section with Better Spacing -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="8dp"
+                        android:layout_marginBottom="20dp">
+
+                        <!-- Health Icon -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="28sp"
+                            android:layout_marginEnd="12dp" />
+
+                        <!-- Title -->
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="HEALTH ALERTS"
+                            android:textColor="@color/warning_text"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
+
+                        <!-- Warning Icon -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="26sp"
+                            android:layout_marginStart="8dp" />
+
+                    </LinearLayout>
+
+                    <!-- Subtitle (optional - shows when warnings present) -->
+                    <TextView
+                        android:id="@+id/health_warnings_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Based on your health goals"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:layout_marginBottom="16dp"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <!-- Warnings Container with Better Spacing -->
+                    <LinearLayout
+                        android:id="@+id/health_warnings_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:divider="@android:color/transparent"
+                        android:showDividers="middle"
+                        android:dividerPadding="8dp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
             <!-- Palm Oil Detection Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/palmOilCard"
@@ -283,7 +373,7 @@
                 app:strokeWidth="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/Product_Info_Card">
+                app:layout_constraintTop_toBottomOf="@id/health_warnings_card">
 
                 <LinearLayout
                     android:layout_width="match_parent"

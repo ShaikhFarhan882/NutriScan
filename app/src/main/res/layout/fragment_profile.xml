@@ -13,17 +13,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:padding="16dp">
 
-            <!-- Profile Header Card -->
+            <!-- Header Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/profile_header_card"
+                android:id="@+id/header_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:strokeWidth="0dp"
-                android:layout_marginBottom="24dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -32,66 +31,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp"
-                    android:gravity="center">
-
-                    <!-- Profile Picture -->
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:src="@drawable/ic_profile_24"
-                        app:civ_border_width="4dp"
-                        app:civ_border_color="?attr/colorPrimary"
-                        android:contentDescription="Profile Image" />
-
-                    <!-- Email Display -->
-                    <TextView
-                        android:id="@+id/email_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="user@example.com"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="16sp"
-                        android:drawablePadding="8dp"
-                        android:drawableTint="?attr/colorPrimary" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Personal Information Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/personal_info_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutline"
-                android:layout_marginBottom="24dp"
-                app:layout_constraintTop_toBottomOf="@id/profile_header_card"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Personal Information"
-                        android:textSize="18sp"
+                        android:text="My Profile"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginBottom="16dp" />
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_marginBottom="12dp" />
 
-                    <!-- Username Input -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -102,8 +52,7 @@
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:counterEnabled="true"
-                        app:counterMaxLength="15"
-                        android:layout_marginBottom="12dp">
+                        app:counterMaxLength="15">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/username_profile"
@@ -111,33 +60,83 @@
                             android:layout_height="wrap_content"
                             android:maxLength="15"
                             android:inputType="textPersonName"
-                            android:imeOptions="actionNext" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Bio Input -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Bio"
-                        app:boxBackgroundMode="outline"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="120">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/bio_profile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:maxLength="120"
-                            android:maxLines="3"
-                            android:inputType="textMultiLine|textCapSentences"
                             android:imeOptions="actionDone" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Health Goals Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/health_goals_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutline"
+                app:layout_constraintTop_toBottomOf="@id/header_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏥 Health Goals"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Get personalized health warnings"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/checkbox_diabetes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🩸 Diabetes Management"
+                        android:padding="8dp"
+                        app:buttonTint="?attr/colorPrimary" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/checkbox_heart_health"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="❤️ Heart Health"
+                        android:padding="8dp"
+                        app:buttonTint="?attr/colorPrimary" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/checkbox_weight_loss"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="⚖️ Weight Management"
+                        android:padding="8dp"
+                        app:buttonTint="?attr/colorPrimary" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/checkbox_low_sodium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🧂 Low Sodium Diet"
+                        android:padding="8dp"
+                        app:buttonTint="?attr/colorPrimary" />
 
                 </LinearLayout>
 
@@ -148,13 +147,13 @@
                 android:id="@+id/dietary_preferences_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="?attr/colorOutline"
-                android:layout_marginBottom="24dp"
-                app:layout_constraintTop_toBottomOf="@id/personal_info_card"
+                app:layout_constraintTop_toBottomOf="@id/health_goals_card"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -162,14 +161,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
-                    <!-- Section Title with Subtitle -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Allergen Preferences"
-                        android:textSize="18sp"
+                        android:text="🚫 Allergen Preferences"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="?attr/colorOnSurface"
                         android:layout_marginBottom="4dp" />
@@ -178,11 +176,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Select allergens you want to avoid"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textColor="?attr/colorOnSurfaceVariant"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_marginBottom="12dp" />
 
-                    <!-- All 11 Allergens in 2-Column Grid -->
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -190,15 +187,14 @@
                         android:alignmentMode="alignBounds"
                         android:columnOrderPreserved="false">
 
-                        <!-- Row 1 -->
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/allergen_gluten"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Gluten Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Gluten"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
@@ -206,20 +202,19 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Milk Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Milk/Dairy"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
-                        <!-- Row 2 -->
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/allergen_eggs"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Egg Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Eggs"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
@@ -227,20 +222,19 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Peanut Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Peanuts"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
-                        <!-- Row 3 -->
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/allergen_nuts"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Tree Nut Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Tree Nuts"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
@@ -248,20 +242,19 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Soy Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Soy"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
-                        <!-- Row 4 -->
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/allergen_fish"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Fish Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Fish"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
@@ -269,20 +262,19 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Shellfish Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Shellfish"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
-                        <!-- Row 5 -->
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/allergen_sesame"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Sesame Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Sesame"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
@@ -290,10 +282,16 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:text="Wheat Free"
-                            android:textSize="15sp"
-                            android:padding="8dp"
+                            android:text="Wheat"
+                            android:textSize="14sp"
+                            android:padding="6dp"
                             app:buttonTint="?attr/colorPrimary" />
+
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1" />
 
                     </GridLayout>
 
@@ -307,21 +305,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@id/dietary_preferences_card"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <!-- Update Profile Button -->
+                <!-- Save Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/update_profile_button"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="Update Profile"
+                    android:text="Save Preferences"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@color/white"
-                    app:iconTint="@color/white"
                     app:cornerRadius="12dp"
                     android:layout_marginBottom="12dp"
                     app:backgroundTint="?attr/colorPrimary" />
@@ -333,7 +330,7 @@
                     android:background="?attr/colorOutline"
                     android:layout_marginVertical="16dp" />
 
-                <!-- Testing Section -->
+                <!-- Developer Tools -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -348,7 +345,7 @@
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Test Register"
+                    android:text="Test Register Screen"
                     android:textColor="?attr/colorPrimary"
                     app:strokeColor="?attr/colorPrimary"
                     app:cornerRadius="8dp"
@@ -359,11 +356,18 @@
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Test Login"
+                    android:text="Test Login Screen"
                     android:textColor="?attr/colorPrimary"
                     app:strokeColor="?attr/colorPrimary"
                     app:cornerRadius="8dp"
                     android:layout_marginBottom="16dp" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutline"
+                    android:layout_marginVertical="8dp" />
 
                 <!-- Logout Button -->
                 <com.google.android.material.button.MaterialButton
